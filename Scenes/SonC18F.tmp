@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjqcestgcx15n"]
+
+[ext_resource type="Script" path="res://Scripts/SongSelection.gd" id="1_2l2nk"]
+[ext_resource type="Texture2D" uid="uid://btwava1ekqde3" path="res://Assets/arrow.png" id="2_36y4i"]
+[ext_resource type="Script" path="res://Scripts/Arrows.gd" id="2_mv6ht"]
+
+[node name="SongSelection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2l2nk")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+clip_contents = false
+layout_mode = 2
+offset_right = 1920.0
+offset_bottom = 1080.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(1920, 2000)
+layout_mode = 2
+
+[node name="Arrows" type="Node2D" parent="ScrollContainer"]
+position = Vector2(960, 140)
+script = ExtResource("2_mv6ht")
+
+[node name="Sprite2D" type="Sprite2D" parent="ScrollContainer/Arrows"]
+position = Vector2(600, 0)
+texture = ExtResource("2_36y4i")
+
+[node name="Sprite2D2" type="Sprite2D" parent="ScrollContainer/Arrows"]
+position = Vector2(-600, 0)
+scale = Vector2(-1, 1)
+texture = ExtResource("2_36y4i")

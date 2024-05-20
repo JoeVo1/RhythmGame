@@ -1,0 +1,139 @@
+[gd_scene load_steps=12 format=3 uid="uid://5ohg8jqi2k34"]
+
+[ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
+[ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
+[ext_resource type="Texture2D" uid="uid://dcl0temup2d50" path="res://Assets/bgunder.png" id="3_05xn2"]
+[ext_resource type="Texture2D" uid="uid://j8nhpmpxphbh" path="res://Assets/fade.png" id="3_vrf2l"]
+[ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="4_agx0j"]
+[ext_resource type="Texture2D" uid="uid://poxst8mqweh6" path="res://Assets/laneBG.png" id="4_ujogh"]
+[ext_resource type="PackedScene" uid="uid://bhmltkjbf66ns" path="res://Prefabs/NoteCollider.tscn" id="5_npedt"]
+[ext_resource type="Texture2D" uid="uid://6f428qxavjb0" path="res://Assets/progressBarBG.png" id="7_mug53"]
+[ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="8_uaxxu"]
+[ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="9_rnyqd"]
+
+[sub_resource type="AudioStream" id="AudioStream_26cnw"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_7fl46")
+
+[node name="BackGrounds" type="Sprite2D" parent="."]
+texture = ExtResource("2_aieoc")
+centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="BackGrounds"]
+top_level = true
+texture = ExtResource("3_vrf2l")
+centered = false
+
+[node name="Sprite2D2" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 135)
+texture = ExtResource("4_ujogh")
+
+[node name="Sprite2D3" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 405)
+texture = ExtResource("4_ujogh")
+
+[node name="Sprite2D4" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 675)
+texture = ExtResource("4_ujogh")
+
+[node name="Sprite2D5" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 945)
+texture = ExtResource("4_ujogh")
+
+[node name="Sprite2D6" type="Sprite2D" parent="BackGrounds"]
+z_index = 1
+texture = ExtResource("9_rnyqd")
+centered = false
+
+[node name="Sprite2D7" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(0, 1080)
+texture = ExtResource("3_05xn2")
+centered = false
+
+[node name="Conductor" parent="." instance=ExtResource("4_agx0j")]
+stream = SubResource("AudioStream_26cnw")
+volume_db = -22.521
+
+[node name="Node" type="Node" parent="."]
+
+[node name="NoteCollider" parent="Node" instance=ExtResource("5_npedt")]
+position = Vector2(1708, 135)
+
+[node name="noteCollider" parent="Node" instance=ExtResource("5_npedt")]
+position = Vector2(1708, 405)
+
+[node name="noteCollider2" parent="Node" instance=ExtResource("5_npedt")]
+position = Vector2(1708, 675)
+
+[node name="noteCollider3" parent="Node" instance=ExtResource("5_npedt")]
+position = Vector2(1708, 945)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+zoom = Vector2(0.95, 0.95)
+
+[node name="FPSCounter" type="Label" parent="."]
+z_index = 2
+offset_left = 1915.0
+offset_top = 960.0
+offset_right = 2026.0
+offset_bottom = 1011.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ComboLabel" type="Label" parent="."]
+z_index = 2
+offset_left = 1915.0
+offset_top = 116.0
+offset_right = 2026.0
+offset_bottom = 167.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AccuracyLabel" type="Label" parent="."]
+z_index = 2
+offset_left = 1915.0
+offset_right = 2026.0
+offset_bottom = 51.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+offset_top = 1085.0
+offset_right = 1920.0
+offset_bottom = 1130.0
+step = 0.0
+texture_under = ExtResource("7_mug53")
+texture_progress = ExtResource("8_uaxxu")
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+offset_left = 700.0
+offset_top = 200.0
+offset_right = 1842.0
+offset_bottom = 900.0
+
+[node name="BackBtn" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 100.0
+offset_right = 850.001
+offset_bottom = 200.001
+theme_override_font_sizes/font_size = 50
+text = "Main Menu"
+
+[node name="CancelBtn" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 400.0
+offset_right = 850.0
+offset_bottom = 500.0
+theme_override_font_sizes/font_size = 50
+text = "Cancel"
+
+[connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
+[connection signal="button_down" from="Panel/BackBtn" to="." method="_on_back_btn_button_down"]
+[connection signal="button_down" from="Panel/CancelBtn" to="." method="_on_cancel_btn_button_down"]

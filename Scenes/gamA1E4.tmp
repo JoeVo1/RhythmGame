@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://5ohg8jqi2k34"]
+
+[ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
+[ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
+[ext_resource type="Texture2D" uid="uid://j8nhpmpxphbh" path="res://Assets/fade.png" id="3_vrf2l"]
+[ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="4_agx0j"]
+[ext_resource type="PackedScene" uid="uid://bhmltkjbf66ns" path="res://Prefabs/NoteCollider.tscn" id="5_npedt"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_7fl46")
+
+[node name="BackGrounds" type="Sprite2D" parent="."]
+texture = ExtResource("2_aieoc")
+centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="BackGrounds"]
+texture = ExtResource("3_vrf2l")
+centered = false
+
+[node name="Conductor" parent="." instance=ExtResource("4_agx0j")]
+stream = null
+
+[node name="NoteCollider" parent="." instance=ExtResource("5_npedt")]
+position = Vector2(1708, 540)
+
+[connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]

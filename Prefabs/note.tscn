@@ -1,0 +1,58 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyvt0rp7ofrk1"]
+
+[ext_resource type="Script" path="res://Scripts/note.gd" id="1_34p86"]
+[ext_resource type="Texture2D" uid="uid://brtmov2a3i6x2" path="res://Assets/Note.png" id="1_os1nh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_230qs"]
+size = Vector2(30, 30)
+
+[sub_resource type="Curve" id="Curve_scdsr"]
+_data = [Vector2(0.00561798, 1), 0.0, 0.0, 0, 0, Vector2(0.988764, 0), -3.05143, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_batyj"]
+colors = PackedColorArray(5.96821e-06, 0.720326, 0.941886, 1, 9.14484e-07, 0.754452, 0.442112, 1)
+
+[node name="Note" type="Area2D" groups=["note"]]
+script = ExtResource("1_34p86")
+
+[node name="Score" type="Sprite2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_os1nh")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -75.0
+offset_top = -100.0
+offset_right = 75.0
+offset_bottom = 100.0
+pivot_offset = Vector2(75, 100)
+theme_override_font_sizes/font_size = 146
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_230qs")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 32
+lifetime = 0.5
+one_shot = true
+speed_scale = 1.5
+explosiveness = 0.93
+direction = Vector2(0, 0)
+spread = 180.0
+initial_velocity_min = 300.0
+initial_velocity_max = 400.0
+scale_amount_min = 5.0
+scale_amount_max = 15.0
+scale_amount_curve = SubResource("Curve_scdsr")
+color_ramp = SubResource("Gradient_batyj")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

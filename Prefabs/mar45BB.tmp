@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt2ig54dehd0v"]
+
+[ext_resource type="Texture2D" uid="uid://cfmp3ia7qnlmm" path="res://Assets/Marker.png" id="1_7ksut"]
+[ext_resource type="Script" path="res://Scripts/Marker.gd" id="2_wsmsa"]
+
+[node name="Marker" type="Sprite2D"]
+texture = ExtResource("1_7ksut")
+script = ExtResource("2_wsmsa")

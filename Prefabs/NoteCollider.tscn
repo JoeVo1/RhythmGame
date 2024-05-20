@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=3 uid="uid://bhmltkjbf66ns"]
+
+[ext_resource type="Script" path="res://Scripts/noteCollider.gd" id="1_f2amj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eb2lj"]
+size = Vector2(250, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jnk6n"]
+size = Vector2(80, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_766un"]
+size = Vector2(50, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txkby"]
+size = Vector2(20, 200)
+
+[node name="noteCollider" type="Node2D"]
+script = ExtResource("1_f2amj")
+
+[node name="MissArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MissArea"]
+shape = SubResource("RectangleShape2D_eb2lj")
+
+[node name="OkayArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OkayArea"]
+shape = SubResource("RectangleShape2D_jnk6n")
+
+[node name="GoodArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoodArea"]
+shape = SubResource("RectangleShape2D_766un")
+
+[node name="PerfectArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PerfectArea"]
+shape = SubResource("RectangleShape2D_txkby")
+
+[connection signal="area_entered" from="MissArea" to="." method="_on_miss_area_area_entered"]
+[connection signal="area_exited" from="MissArea" to="." method="_on_miss_area_area_exited"]
+[connection signal="area_entered" from="OkayArea" to="." method="_on_okay_area_area_entered"]
+[connection signal="area_exited" from="OkayArea" to="." method="_on_okay_area_area_exited"]
+[connection signal="area_entered" from="GoodArea" to="." method="_on_good_area_area_entered"]
+[connection signal="area_exited" from="GoodArea" to="." method="_on_good_area_area_exited"]
+[connection signal="area_entered" from="PerfectArea" to="." method="_on_perfect_area_area_entered"]
+[connection signal="area_exited" from="PerfectArea" to="." method="_on_perfect_area_area_exited"]

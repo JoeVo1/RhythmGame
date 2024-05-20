@@ -1,0 +1,182 @@
+[gd_scene load_steps=13 format=3 uid="uid://o3bgo06nobmf"]
+
+[ext_resource type="Script" path="res://Scripts/editor.gd" id="1_0upao"]
+[ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_jj87p"]
+[ext_resource type="Texture2D" uid="uid://j8nhpmpxphbh" path="res://Assets/fade.png" id="3_nsyi2"]
+[ext_resource type="Texture2D" uid="uid://poxst8mqweh6" path="res://Assets/laneBG.png" id="4_5nqx1"]
+[ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="5_1lyxh"]
+[ext_resource type="Texture2D" uid="uid://dcl0temup2d50" path="res://Assets/bgunder.png" id="6_2iorp"]
+[ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="7_8wike"]
+[ext_resource type="PackedScene" uid="uid://bhmltkjbf66ns" path="res://Prefabs/NoteCollider.tscn" id="8_i671c"]
+[ext_resource type="Texture2D" uid="uid://6f428qxavjb0" path="res://Assets/progressBarBG.png" id="9_mp68s"]
+[ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="10_mm36i"]
+
+[sub_resource type="AudioStream" id="AudioStream_75wtw"]
+
+[sub_resource type="Theme" id="Theme_et0fp"]
+default_font_size = 40
+
+[node name="Edit" type="Node2D"]
+script = ExtResource("1_0upao")
+
+[node name="BackGrounds" type="Sprite2D" parent="."]
+texture = ExtResource("2_jj87p")
+centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="BackGrounds"]
+top_level = true
+texture = ExtResource("3_nsyi2")
+centered = false
+
+[node name="Sprite2D2" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 135)
+texture = ExtResource("4_5nqx1")
+
+[node name="Sprite2D3" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 405)
+texture = ExtResource("4_5nqx1")
+
+[node name="Sprite2D4" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 675)
+texture = ExtResource("4_5nqx1")
+
+[node name="Sprite2D5" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(907, 945)
+texture = ExtResource("4_5nqx1")
+
+[node name="Sprite2D6" type="Sprite2D" parent="BackGrounds"]
+z_index = 1
+texture = ExtResource("5_1lyxh")
+centered = false
+
+[node name="Sprite2D7" type="Sprite2D" parent="BackGrounds"]
+position = Vector2(0, 1080)
+texture = ExtResource("6_2iorp")
+centered = false
+
+[node name="Conductor" parent="." instance=ExtResource("7_8wike")]
+stream = SubResource("AudioStream_75wtw")
+volume_db = -22.521
+
+[node name="Colliders" type="Node" parent="."]
+
+[node name="NoteCollider" parent="Colliders" instance=ExtResource("8_i671c")]
+position = Vector2(1708, 135)
+
+[node name="noteCollider" parent="Colliders" instance=ExtResource("8_i671c")]
+position = Vector2(1708, 405)
+
+[node name="noteCollider2" parent="Colliders" instance=ExtResource("8_i671c")]
+position = Vector2(1708, 675)
+
+[node name="noteCollider3" parent="Colliders" instance=ExtResource("8_i671c")]
+position = Vector2(1708, 945)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, -216)
+anchor_mode = 0
+zoom = Vector2(0.8, 0.8)
+
+[node name="UI" type="Node" parent="."]
+
+[node name="FPSCounter" type="Label" parent="UI"]
+z_index = 2
+offset_left = 1915.0
+offset_top = 960.0
+offset_right = 2026.0
+offset_bottom = 1011.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ComboLabel" type="Label" parent="UI"]
+z_index = 2
+offset_left = 1915.0
+offset_top = 116.0
+offset_right = 2026.0
+offset_bottom = 167.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AccuracyLabel" type="Label" parent="UI"]
+z_index = 2
+offset_left = 1915.0
+offset_right = 2026.0
+offset_bottom = 51.0
+theme_override_font_sizes/font_size = 37
+horizontal_alignment = 1
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="UI"]
+offset_top = 1085.0
+offset_right = 1920.0
+offset_bottom = 1130.0
+step = 0.0
+texture_under = ExtResource("9_mp68s")
+texture_progress = ExtResource("10_mm36i")
+
+[node name="ColorRect" type="ColorRect" parent="UI"]
+custom_minimum_size = Vector2(2400, 216)
+offset_top = -216.0
+offset_right = 2400.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI"]
+top_level = true
+offset_top = -216.0
+offset_right = 2400.0
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ScrollContainer"]
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="UI/ScrollContainer/HBoxContainer"]
+
+[node name="ColorRect" type="ColorRect" parent="UI/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30000, 216)
+layout_mode = 2
+
+[node name="Markers" type="Node2D" parent="UI"]
+
+[node name="BPM" type="SpinBox" parent="UI"]
+offset_left = 2020.0
+offset_right = 2320.0
+offset_bottom = 80.0
+theme = SubResource("Theme_et0fp")
+max_value = 10000.0
+step = 0.01
+prefix = "BPM:"
+
+[node name="Delay" type="SpinBox" parent="UI"]
+offset_left = 2020.0
+offset_top = 85.0
+offset_right = 2320.0
+offset_bottom = 165.0
+theme = SubResource("Theme_et0fp")
+min_value = -10000.0
+max_value = 10000.0
+step = 0.01
+prefix = "Delay:"
+
+[node name="FileBtn" type="Button" parent="UI"]
+offset_left = 2020.0
+offset_top = 170.0
+offset_right = 2400.0
+offset_bottom = 250.0
+alignment = 0
+clip_text = true
+
+[node name="FileDialog" type="FileDialog" parent="UI"]
+title = "Open a File"
+position = Vector2i(35, 65)
+size = Vector2i(1000, 500)
+popup_window = true
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+
+[connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
+[connection signal="value_changed" from="UI/BPM" to="." method="_on_bpm_value_changed"]
+[connection signal="value_changed" from="UI/Delay" to="." method="_on_delay_value_changed"]
+[connection signal="button_down" from="UI/FileBtn" to="." method="_on_file_btn_button_down"]
+[connection signal="file_selected" from="UI/FileDialog" to="." method="_on_file_dialog_file_selected"]
