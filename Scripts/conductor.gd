@@ -21,6 +21,7 @@ var time_off_beat = 0.0
 
 signal beat(position)
 signal measureSignal(position)
+signal songFinished()
 
 func loadSong(path, _bpm, _delay):
 	if(path == null):
@@ -49,6 +50,8 @@ func _report_beat():
 		emit_signal("measureSignal", measure)
 		last_reported_beat = song_position_in_beats
 		measure += 1
+		if(song_position_in_beats >= song_length_in_beats - 3):
+			emit_signal("songFinished")
 
 func closest_beat(nth):
 	closest = int(round((song_position / sec_per_beat) / nth) * nth) 

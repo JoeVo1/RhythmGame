@@ -1,3 +1,4 @@
+class_name note_
 extends Area2D
 
 const lane1 = Vector2(-50,135)
@@ -5,6 +6,7 @@ const lane2 = Vector2(-50,405)
 const lane3 = Vector2(-50,675)
 const lane4 = Vector2(-50,945)
 var speed
+static var pause : bool = false
 @onready var scoreLabels = [preload("res://Assets/miss.png"), preload("res://Assets/ok.png"), preload("res://Assets/good.png"), preload("res://Assets/perfect.png")]
 @onready var accuracy = preload("res://Scripts/noteCollider.gd")
 @onready var label = $Label
@@ -27,6 +29,8 @@ func initialize(lane, _char, beatsToGoal):
 			position = lane4
 
 func _physics_process(delta):
+	if(pause):
+		return
 	if hit:
 		var scale = lerp($Score.scale.x, 0.1, 0.1)
 		$Score.scale = Vector2(scale, scale)
@@ -35,7 +39,7 @@ func _physics_process(delta):
 	if(position.x > 2000):
 		accuracy.combo = 0
 		accuracy.notesHit += 1
-		get_parent().updateScore()
+		get_parent().get_parent().updateScore()
 		queue_free()
 
 func destroy(score):

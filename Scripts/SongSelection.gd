@@ -4,6 +4,7 @@ const path = "user://Songs/"
 const GUI = preload("res://Prefabs/song_gui.tscn")
 const guiOffset = 140
 var sceneToUse
+var mainMenu = preload("res://Scenes/main_menu.tscn")
 var gameScene = preload("res://Scenes/game.tscn")
 var editorScene = preload("res://Scenes/edit.tscn")
 var pos1 = 0.0
@@ -20,8 +21,6 @@ func _physics_process(delta):
 	$ScrollContainer.scroll_vertical = lerp(float($ScrollContainer.scroll_vertical), float(pos2), switchSpeed * delta)
 	noteGUIs[curPos].scale = lerp(Vector2(noteGUIs[curPos].scale), Vector2(1.05,1.05), 0.1)
 func _unhandled_key_input(event):
-	if(!visible):
-		return
 	if(event.is_action_pressed("ui_down")):
 		if(curPos >= MaxPos):
 			return
@@ -40,6 +39,11 @@ func _unhandled_key_input(event):
 	
 	if(event.is_action_pressed("ui_accept")):
 		loadSong(0)
+	
+	if(event.is_action_pressed("ui_cancel")):
+		var GameInstance = mainMenu.instantiate()
+		get_parent().add_child(GameInstance)
+		queue_free()
 
 func changeGameScene(sceneIndex):
 	var editor = false
@@ -73,7 +77,6 @@ func loadSong(value):
 	GameInstance.path = path + songToPlay
 	get_parent().add_child(GameInstance)
 	queue_free()
-	visible = false
 
 func _input(event):
 	if(not event is InputEventMouse || event is InputEventMouseMotion || event.is_released()):
@@ -83,7 +86,7 @@ func _input(event):
 			loadSong(int(event.position.y + 80)/ guiOffset - 1)
 
 func SetColor(i):
-	if(i + curPos > dir.len()):
+	if(i + curPos > dir.size() || dir[curPos + i] == "New Map"):
 		return
 	var dataPath = null
 	for file in DirAccess.get_files_at(path + str(dir[curPos + i])):
@@ -93,7 +96,7 @@ func SetColor(i):
 		return
 	var songData = parseFile(dataPath)
 	if(!songData.has("color")):
-		noteGUIs[curPos + i].self_modulate = Color(0,0.7,0,1)
+		noteGUIs[curPos + i].self_modulate = Color(0.556952,1,0.579451,1)
 		return
 	noteGUIs[curPos + i].self_modulate = str_to_var(songData.color)
 

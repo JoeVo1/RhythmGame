@@ -6,16 +6,18 @@ var path
 var songPath
 var dataPath
 var Note = preload("res://Prefabs/note.tscn")
-var accuracy = preload("res://Scripts/noteCollider.gd")
+var accuracy = Collider
 var NoteInstance
 var bpm
 var songData
 var currentBeat = 0
 var maxBeats
 var delay
+var color
 var approachRate = 2
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	conductor.volume_db = SaveSettings.readData().audio
 	for file in DirAccess.get_files_at(path):
 		if(file.ends_with(".ogg")):
 			songPath = path + '/' + file
@@ -24,10 +26,24 @@ func _ready():
 	songData = parseFile(dataPath)
 	conductor.loadSong(songPath,bpm,delay)
 	$TextureProgressBar.max_value = conductor.song_length
+	$Doors/Top.self_modulate = color
+	$Doors/Bottem.self_modulate = color
 
 func _unhandled_input(event):
 	if(event.is_action_pressed("ui_cancel")):
+		conductor.stream_paused = true
+		note_.pause = true
 		$Panel.visible = true
+	if(event is InputEventMouseButton):
+		if(event.button_index == MOUSE_BUTTON_WHEEL_UP):
+			conductor.volume_db += 1.04
+			$VolumeBar.value = conductor.volume_db
+			showVolumeBar()
+			return
+		if(event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
+			conductor.volume_db -= 1.04
+			$VolumeBar.value = conductor.volume_db
+			showVolumeBar()
 
 func _on_conductor_beat(position):
 	if(maxBeats == currentBeat):
@@ -52,7 +68,7 @@ func updateScore():
 
 func spawnNote(lane, _char):
 	NoteInstance = Note.instantiate()
-	add_child(NoteInstance)
+	$Notes.add_child(NoteInstance)
 	NoteInstance.initialize(lane, _char, approachRate)
 
 func parseFile(_path):
@@ -60,6 +76,7 @@ func parseFile(_path):
 	var data = file.get_as_text()
 	file.close()
 	data = JSON.parse_string(data)
+	color = str_to_var(data.color)
 	bpm = data.bpm
 	delay = data.delay
 	maxBeats = (data.charts[0].notes).size()
@@ -78,9 +95,24 @@ func customSort(a,b):
 
 
 func _on_back_btn_button_down():
+	SaveSettings.writeData(conductor.volume_db)
 	get_tree().current_scene = self
 	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
 
 
 func _on_cancel_btn_button_down():
+	conductor.stream_paused = false
+	note_.pause = false
 	$Panel.visible = false
+
+
+func _on_conductor_song_finished():
+	SaveSettings.writeData(conductor.volume_db)
+	$Doors.closeDoors()
+
+func showVolumeBar() -> void:
+	$VolumeBar.visible = true
+	$Timer.wait_time = (1)
+	$Timer.start()
+	await $Timer.timeout
+	$VolumeBar.visible = false

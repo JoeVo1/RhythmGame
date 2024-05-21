@@ -1,3 +1,4 @@
+class_name Collider
 extends Node2D
 
 var miss
@@ -5,6 +6,10 @@ var okay
 var good
 var perfect
 var currentNote = []
+static var okayScore = 0
+static var goodScore = 0
+static var perfectScore = 0
+static var misses = 0
 static var TotalScore = 0
 static var notesHit = 0
 static var combo = 0
@@ -17,16 +22,20 @@ func _unhandled_key_input(event):
 			perfect:
 				combo +=1
 				TotalScore += 100
+				perfectScore += 1
 				currentNote[0].destroy(3)
 			good:
 				combo +=1
 				TotalScore += 50
+				goodScore += 1
 				currentNote[0].destroy(2)
 			okay:
 				combo +=1
 				TotalScore += 20
+				okayScore += 1
 				currentNote[0].destroy(1)
 			miss:
+				misses += 1
 				combo = 0
 				currentNote[0].destroy(0)
 		notesHit += 1

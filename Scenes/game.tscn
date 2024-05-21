@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://5ohg8jqi2k34"]
+[gd_scene load_steps=16 format=3 uid="uid://5ohg8jqi2k34"]
 
 [ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
@@ -10,6 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://6f428qxavjb0" path="res://Assets/progressBarBG.png" id="7_mug53"]
 [ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="8_uaxxu"]
 [ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="9_rnyqd"]
+[ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="11_bn4rh"]
+[ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="12_se3sn"]
+[ext_resource type="Script" path="res://Scenes/ClosingDoors.gd" id="13_f0c6j"]
+[ext_resource type="Texture2D" uid="uid://2a7e7mwactfc" path="res://Assets/closingScene.png" id="14_lnmbo"]
 
 [sub_resource type="AudioStream" id="AudioStream_26cnw"]
 
@@ -53,7 +57,7 @@ centered = false
 
 [node name="Conductor" parent="." instance=ExtResource("4_agx0j")]
 stream = SubResource("AudioStream_26cnw")
-volume_db = -22.521
+volume_db = 24.0
 
 [node name="Node" type="Node" parent="."]
 
@@ -111,9 +115,10 @@ texture_progress = ExtResource("8_uaxxu")
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
-offset_left = 700.0
+z_index = 3
+offset_left = 535.05
 offset_top = 200.0
-offset_right = 1842.0
+offset_right = 1677.05
 offset_bottom = 900.0
 
 [node name="BackBtn" type="Button" parent="Panel"]
@@ -134,6 +139,142 @@ offset_bottom = 500.0
 theme_override_font_sizes/font_size = 50
 text = "Cancel"
 
+[node name="VolumeBar" type="TextureProgressBar" parent="."]
+visible = false
+z_index = 1
+offset_left = 1920.0
+offset_top = 857.23
+offset_right = 2021.0
+offset_bottom = 958.231
+min_value = -80.0
+max_value = 24.0
+value = -80.0
+fill_mode = 4
+texture_under = ExtResource("11_bn4rh")
+texture_progress = ExtResource("12_se3sn")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Notes" type="Node" parent="."]
+
+[node name="Doors" type="Node2D" parent="."]
+script = ExtResource("13_f0c6j")
+topDestination = -132.5
+bottemDestination = 277.0
+
+[node name="Top" type="Sprite2D" parent="Doors"]
+z_index = 4
+position = Vector2(0, -766.225)
+texture = ExtResource("14_lnmbo")
+centered = false
+
+[node name="Bottem" type="Sprite2D" parent="Doors"]
+z_index = 4
+position = Vector2(0, 829.635)
+texture = ExtResource("14_lnmbo")
+centered = false
+flip_v = true
+
+[node name="DoorTimer" type="Timer" parent="Doors"]
+wait_time = 1.5
+one_shot = true
+
+[node name="Panel" type="Panel" parent="Doors"]
+visible = false
+self_modulate = Color(0, 0, 0, 1)
+z_index = 5
+offset_left = 40.0
+offset_top = 50.0
+offset_right = 1980.0
+offset_bottom = 1050.0
+
+[node name="Score" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 50.0
+offset_right = 554.47
+offset_bottom = 139.41
+
+[node name="Label" type="Label" parent="Doors/Panel/Score"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Score: "
+
+[node name="Misses" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 200.0
+offset_right = 554.47
+offset_bottom = 289.41
+
+[node name="Label" type="Label" parent="Doors/Panel/Misses"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Misses: "
+
+[node name="Okay" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 350.0
+offset_right = 554.47
+offset_bottom = 439.41
+
+[node name="Label" type="Label" parent="Doors/Panel/Okay"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Okay: "
+
+[node name="Good" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 500.0
+offset_right = 554.47
+offset_bottom = 589.41
+
+[node name="Label" type="Label" parent="Doors/Panel/Good"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Good: "
+
+[node name="Perfect" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 650.0
+offset_right = 554.47
+offset_bottom = 739.41
+
+[node name="Label" type="Label" parent="Doors/Panel/Perfect"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Perfect: "
+
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
+[connection signal="songFinished" from="Conductor" to="." method="_on_conductor_song_finished"]
 [connection signal="button_down" from="Panel/BackBtn" to="." method="_on_back_btn_button_down"]
 [connection signal="button_down" from="Panel/CancelBtn" to="." method="_on_cancel_btn_button_down"]
+[connection signal="timeout" from="Doors/DoorTimer" to="Doors" method="_on_door_timer_timeout"]
