@@ -6,13 +6,13 @@
 size = Vector2(250, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jnk6n"]
-size = Vector2(80, 200)
+size = Vector2(46, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_766un"]
-size = Vector2(50, 200)
+size = Vector2(31, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_txkby"]
-size = Vector2(20, 200)
+size = Vector2(16, 200)
 
 [node name="noteCollider" type="Node2D"]
 script = ExtResource("1_f2amj")
@@ -25,16 +25,19 @@ shape = SubResource("RectangleShape2D_eb2lj")
 [node name="OkayArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="OkayArea"]
+position = Vector2(-17, 0)
 shape = SubResource("RectangleShape2D_jnk6n")
 
 [node name="GoodArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoodArea"]
+position = Vector2(-9.5, 0)
 shape = SubResource("RectangleShape2D_766un")
 
 [node name="PerfectArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PerfectArea"]
+position = Vector2(-2, 0)
 shape = SubResource("RectangleShape2D_txkby")
 
 [connection signal="area_entered" from="MissArea" to="." method="_on_miss_area_area_entered"]

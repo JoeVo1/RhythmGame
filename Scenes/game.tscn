@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://5ohg8jqi2k34"]
+[gd_scene load_steps=17 format=3 uid="uid://5ohg8jqi2k34"]
 
 [ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
@@ -12,8 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="9_rnyqd"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="11_bn4rh"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="12_se3sn"]
-[ext_resource type="Script" path="res://Scenes/ClosingDoors.gd" id="13_f0c6j"]
+[ext_resource type="Script" path="res://Scripts/ClosingDoors.gd" id="13_hrdxn"]
 [ext_resource type="Texture2D" uid="uid://2a7e7mwactfc" path="res://Assets/closingScene.png" id="14_lnmbo"]
+[ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="15_fe18q"]
 
 [sub_resource type="AudioStream" id="AudioStream_26cnw"]
 
@@ -25,7 +26,7 @@ texture = ExtResource("2_aieoc")
 centered = false
 
 [node name="Sprite2D" type="Sprite2D" parent="BackGrounds"]
-top_level = true
+z_index = 2
 texture = ExtResource("3_vrf2l")
 centered = false
 
@@ -158,7 +159,7 @@ texture_progress = ExtResource("12_se3sn")
 [node name="Notes" type="Node" parent="."]
 
 [node name="Doors" type="Node2D" parent="."]
-script = ExtResource("13_f0c6j")
+script = ExtResource("13_hrdxn")
 topDestination = -132.5
 bottemDestination = 277.0
 
@@ -181,7 +182,7 @@ one_shot = true
 
 [node name="Panel" type="Panel" parent="Doors"]
 visible = false
-self_modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0, 0, 0, 0)
 z_index = 5
 offset_left = 40.0
 offset_top = 50.0
@@ -272,6 +273,11 @@ offset_bottom = 81.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 50
 text = "Perfect: "
+
+[node name="Transition" parent="." instance=ExtResource("15_fe18q")]
+
+[node name="FinishTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
 [connection signal="songFinished" from="Conductor" to="." method="_on_conductor_song_finished"]

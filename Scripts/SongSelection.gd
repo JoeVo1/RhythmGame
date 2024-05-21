@@ -16,6 +16,7 @@ var curPos = 0
 static var songToPlay
 var dir
 var noteGUIs: Array
+var changingScene = false
 
 func _physics_process(delta):
 	$ScrollContainer.scroll_vertical = lerp(float($ScrollContainer.scroll_vertical), float(pos2), switchSpeed * delta)
@@ -38,14 +39,25 @@ func _unhandled_key_input(event):
 		SetColor(0)
 	
 	if(event.is_action_pressed("ui_accept")):
+		if(changingScene):
+			return
+		changingScene = true
+		$Transition.play("fade_out")
+		await $Transition.animation_finished
 		loadSong(0)
 	
 	if(event.is_action_pressed("ui_cancel")):
+		if(changingScene):
+			return
+		changingScene = true
+		$Transition.play("fade_out")
+		await $Transition.animation_finished
 		var GameInstance = mainMenu.instantiate()
 		get_parent().add_child(GameInstance)
 		queue_free()
 
 func changeGameScene(sceneIndex):
+	$Transition.play("fade_in")
 	var editor = false
 	match sceneIndex:
 		0:
@@ -86,7 +98,7 @@ func _input(event):
 			loadSong(int(event.position.y + 80)/ guiOffset - 1)
 
 func SetColor(i):
-	if(i + curPos > dir.size() || dir[curPos + i] == "New Map"):
+	if(i + curPos > dir.size() - 1 || dir[curPos + i] == "New Map"):
 		return
 	var dataPath = null
 	for file in DirAccess.get_files_at(path + str(dir[curPos + i])):
@@ -94,7 +106,7 @@ func SetColor(i):
 			dataPath = path + dir[curPos + i] + '/' + file
 	if(dataPath == null):
 		return
-	var songData = parseFile(dataPath)
+	var songData: Dictionary = parseFile(dataPath)
 	if(!songData.has("color")):
 		noteGUIs[curPos + i].self_modulate = Color(0.556952,1,0.579451,1)
 		return

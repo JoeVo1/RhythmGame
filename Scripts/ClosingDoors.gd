@@ -3,12 +3,16 @@ extends Node2D
 @export var topDestination: float
 @export var bottemDestination: float
 var closing = false
+var mod = false
 
 func _physics_process(delta):
 	if(!closing):
 		return
 	$Top.position.y = lerpf($Top.position.y, topDestination, 0.05)
 	$Bottem.position.y = lerpf($Bottem.position.y, bottemDestination, 0.05)
+	if(mod):
+		if($Panel.self_modulate.a < 1):
+			$Panel.self_modulate += Color(0.2,0.2,0.2) * delta
 
 func closeDoors():
 	closing = true
@@ -20,4 +24,5 @@ func _on_door_timer_timeout():
 	$Panel/Okay/Label.text += str(Collider.okayScore)
 	$Panel/Good/Label.text += str(Collider.goodScore)
 	$Panel/Perfect/Label.text += str(Collider.perfectScore)
+	mod = true
 	$Panel.visible = true

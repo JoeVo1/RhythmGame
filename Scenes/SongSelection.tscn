@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://xlgdfegog77e"]
+[gd_scene load_steps=5 format=3 uid="uid://xlgdfegog77e"]
 
 [ext_resource type="Script" path="res://Scripts/SongSelection.gd" id="1_7ad2l"]
 [ext_resource type="Texture2D" uid="uid://btwava1ekqde3" path="res://Assets/arrow.png" id="2_36y4i"]
 [ext_resource type="Script" path="res://Scripts/Arrows.gd" id="2_mv6ht"]
+[ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="4_0cbcg"]
 
 [node name="SongSelection" type="Node2D"]
 script = ExtResource("1_7ad2l")
@@ -34,3 +35,5 @@ texture = ExtResource("2_36y4i")
 position = Vector2(-600, 0)
 scale = Vector2(-1, 1)
 texture = ExtResource("2_36y4i")
+
+[node name="Transition" parent="." instance=ExtResource("4_0cbcg")]

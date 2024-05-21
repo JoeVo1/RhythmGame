@@ -238,6 +238,8 @@ offset_top = 395.0
 offset_right = 2400.0
 offset_bottom = 971.0
 
+[node name="Notes" type="Node" parent="."]
+
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
 [connection signal="value_changed" from="UI/BPM" to="." method="_on_bpm_value_changed"]
 [connection signal="value_changed" from="UI/Delay" to="." method="_on_delay_value_changed"]

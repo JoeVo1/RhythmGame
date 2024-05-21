@@ -186,7 +186,7 @@ func updateScore():
 
 func spawnNote(lane, _char):
 	NoteInstance = Note.instantiate()
-	add_child(NoteInstance)
+	$Notes.add_child(NoteInstance)
 	NoteInstance.initialize(lane, _char, approachRate)
 
 func parseFile(_path):
@@ -211,7 +211,7 @@ func writeFile():
 	var notes : Array
 	data["bpm"] = bpm
 	data["delay"] = delay
-	
+	var i = 0
 	for note in allNotes.values():
 		var dic : Dictionary
 		dic["beat"] = note.beat
@@ -226,7 +226,7 @@ func writeFile():
 	else:
 		data["color"] = var_to_str(Color(1,1,1,1))
 	if(path == "user://Songs/New Map"):
-		var i = 0
+		
 		while(true):
 			if(DirAccess.dir_exists_absolute(path + str(i))):
 				i+=1
@@ -239,6 +239,11 @@ func writeFile():
 		return
 	var file = FileAccess.open(dataPath, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
+	var songfile = FileAccess.open(songPath, FileAccess.READ)
+	songfile = songfile.get_buffer(INF)
+	print(songfile)
+	var newSongFile = FileAccess.open(path + str(i) + "/song.ogg", FileAccess.WRITE)
+	newSongFile.store_buffer(songfile)
 
 func customSort(a,b):
 	return a.beat < b.beat

@@ -13,10 +13,13 @@ var songData
 var currentBeat = 0
 var maxBeats
 var delay
-var color
+var color: Color
 var approachRate = 2
+var changingScene = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$Doors.set_process(false)
+	$Transition.play("fade_in")
 	conductor.volume_db = SaveSettings.readData().audio
 	for file in DirAccess.get_files_at(path):
 		if(file.ends_with(".ogg")):
@@ -26,6 +29,8 @@ func _ready():
 	songData = parseFile(dataPath)
 	conductor.loadSong(songPath,bpm,delay)
 	$TextureProgressBar.max_value = conductor.song_length
+	color *= 0.2
+	color.a = 1
 	$Doors/Top.self_modulate = color
 	$Doors/Bottem.self_modulate = color
 
@@ -93,21 +98,27 @@ func parseFile(_path):
 func customSort(a,b):
 	return a.beat < b.beat
 
-
 func _on_back_btn_button_down():
+	if(changingScene):
+		return
+	changingScene = true
 	SaveSettings.writeData(conductor.volume_db)
+	$Transition.play("fade_out")
+	await $Transition.animation_finished
 	get_tree().current_scene = self
 	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
-
 
 func _on_cancel_btn_button_down():
 	conductor.stream_paused = false
 	note_.pause = false
 	$Panel.visible = false
 
-
 func _on_conductor_song_finished():
+	$FinishTimer.wait_time = conductor.sec_per_beat * 4
+	$FinishTimer.start()
+	await $FinishTimer.timeout
 	SaveSettings.writeData(conductor.volume_db)
+	$Doors.set_process(true)
 	$Doors.closeDoors()
 
 func showVolumeBar() -> void:

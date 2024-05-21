@@ -1,0 +1,176 @@
+[gd_scene load_steps=3 format=3 uid="uid://c6n5p8l5rren5"]
+
+[ext_resource type="Script" path="res://AudioVisualizer.gd" id="1_70aoh"]
+[ext_resource type="Texture2D" uid="uid://brtmov2a3i6x2" path="res://Assets/Note.png" id="2_k1q82"]
+
+[node name="AudioVisualizer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_70aoh")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="CircleBase" type="TextureRect" parent="."]
+offset_right = 210.0
+offset_bottom = 210.0
+texture = ExtResource("2_k1q82")
+
+[node name="Right" type="Control" parent="CircleBase"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bottem" type="Control" parent="CircleBase/Right"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -67.0
+offset_top = 21.0
+offset_right = -65.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect2" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 21.0
+offset_right = -59.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect3" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -52.0
+offset_top = 21.0
+offset_right = -50.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect4" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -46.0
+offset_top = 21.0
+offset_right = -44.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect5" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -39.0
+offset_top = 21.0
+offset_right = -37.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect6" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -33.0
+offset_top = 21.0
+offset_right = -31.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect7" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -26.0
+offset_top = 21.0
+offset_right = -24.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect8" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 21.0
+offset_right = -18.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect9" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -11.0
+offset_top = 21.0
+offset_right = -9.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect10" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = -5.0
+offset_top = 21.0
+offset_right = -3.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect11" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 21.0
+offset_right = 4.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect12" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 21.0
+offset_right = 10.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect13" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 21.0
+offset_right = 20.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect14" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 21.0
+offset_right = 26.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect15" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 21.0
+offset_right = 33.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
+
+[node name="ColorRect16" type="ColorRect" parent="CircleBase/Right/bottem"]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 21.0
+offset_right = 39.0
+offset_bottom = 22.0
+pivot_offset = Vector2(1, 0.5)
