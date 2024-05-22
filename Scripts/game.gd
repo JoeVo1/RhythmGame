@@ -31,8 +31,8 @@ func _ready():
 	$TextureProgressBar.max_value = conductor.song_length
 	color *= 0.2
 	color.a = 1
-	$Doors/Top.self_modulate = color
-	$Doors/Bottem.self_modulate = color
+	$Doors/DoorAni/Top.self_modulate = color
+	$Doors/DoorAni/Bottem.self_modulate = color
 
 func _unhandled_input(event):
 	if(event.is_action_pressed("ui_cancel")):
@@ -65,7 +65,6 @@ func _on_conductor_beat(position):
 
 func _physics_process(delta):
 	$TextureProgressBar.value = conductor.song_position
-	$FPSCounter.text = "FPS:\n" + str(Engine.get_frames_per_second())
 
 func updateScore():
 	$ComboLabel.text = str(accuracy.combo)

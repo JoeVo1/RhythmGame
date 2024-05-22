@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://c6qut1teuwudk"]
+[gd_scene load_steps=12 format=3 uid="uid://c6qut1teuwudk"]
 
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_oqj31"]
 [ext_resource type="PackedScene" uid="uid://c6n5p8l5rren5" path="res://Prefabs/audio_visualizer.tscn" id="2_i2jmd"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="3_m1d8i"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="4_jsqoh"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="5_sunvn"]
+[ext_resource type="Script" path="res://Scenes/SFX.gd" id="6_p2nvd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74css"]
 bg_color = Color(0.1741, 0.358487, 1, 1)
@@ -36,6 +37,19 @@ Button/font_sizes/font_size = 60
 Button/styles/hover = SubResource("StyleBoxFlat_74css")
 Button/styles/normal = SubResource("StyleBoxFlat_38s8s")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_32shs"]
+content_margin_left = 500.0
+content_margin_top = 40.0
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eodfd"]
+bg_color = Color(0.409545, 0.576156, 1, 1)
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -47,6 +61,7 @@ script = ExtResource("1_oqj31")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
+position_smoothing_enabled = true
 
 [node name="PlayBtn" type="Button" parent="."]
 layout_mode = 0
@@ -89,13 +104,23 @@ pivot_offset = Vector2(250, 0)
 theme = SubResource("Theme_mg802")
 text = "Quit"
 
+[node name="SettingsMenu" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HSlider" type="HSlider" parent="SettingsMenu"]
+offset_left = 2136.0
+offset_top = 108.0
+offset_right = 2636.0
+offset_bottom = 318.735
+theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_eodfd")
+
 [node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
-layout_mode = 1
-offset_top = 1080.0
-offset_right = 0.000976563
-offset_bottom = 1080.0
 
 [node name="VolumeBar" type="TextureProgressBar" parent="."]
+visible = false
 z_index = 1
 layout_mode = 0
 offset_left = 1819.0
@@ -114,7 +139,14 @@ wait_time = 1.5
 
 [node name="Transition" parent="." instance=ExtResource("5_sunvn")]
 
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+script = ExtResource("6_p2nvd")
+
 [connection signal="button_down" from="PlayBtn" to="." method="_on_play_btn_button_down"]
+[connection signal="mouse_entered" from="PlayBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="EditBtn" to="." method="_on_edit_btn_button_down"]
+[connection signal="mouse_entered" from="EditBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="SettingsBtn" to="." method="_on_settings_btn_button_down"]
+[connection signal="mouse_entered" from="SettingsBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="QuitBtn" to="." method="_on_quit_btn_button_down"]
+[connection signal="mouse_entered" from="QuitBtn" to="SFX" method="hover"]

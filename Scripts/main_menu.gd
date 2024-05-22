@@ -1,12 +1,17 @@
 extends Control
 var rng = RandomNumberGenerator.new()
 var songSelection = load("res://Scenes/SongSelection.tscn")
+var files = DirAccess.get_directories_at("user://Songs/")
 
 func _ready():
 	$AudioVisualizer.initVolume(SaveSettings.readData().audio)
-	var files = DirAccess.get_directories_at("user://Songs/")
-	$AudioVisualizer.playSong(files[rng.randi_range(0,files.size() - 1)])
+	PlayMusic()
 	$Transition.play("fade_in")
+
+
+func PlayMusic():
+	$AudioVisualizer.playSong(files[rng.randi_range(0,files.size() - 1)])
+
 
 func _on_play_btn_button_down():
 	$Transition.play("fade_out")
@@ -37,6 +42,7 @@ func _on_quit_btn_button_down():
 	await $Transition.animation_finished
 	SaveSettings.writeData($AudioVisualizer.volume)
 	get_tree().quit()
+
 
 func _unhandled_input(event):
 	if(event is InputEventMouseButton):

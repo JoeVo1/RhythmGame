@@ -26,6 +26,7 @@ var allNotes = {}
 var playFrom = 0
 var selectedNote
 var SelectorColor = null
+var saveFolder = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_viewport().files_dropped.connect(on_file_dropped)
@@ -233,17 +234,12 @@ func writeFile():
 			else:
 				break
 		var dir = DirAccess.make_dir_absolute(path + str(i))
-		print(path + str(i))
 		var file = FileAccess.open(path + str(i) + "/data.json", FileAccess.WRITE)
 		file.store_string(JSON.stringify(data))
-		return
-	var file = FileAccess.open(dataPath, FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
 	var songfile = FileAccess.open(songPath, FileAccess.READ)
-	songfile = songfile.get_buffer(INF)
-	print(songfile)
+	var buffer = songfile.get_buffer(songfile.get_length())
 	var newSongFile = FileAccess.open(path + str(i) + "/song.ogg", FileAccess.WRITE)
-	newSongFile.store_buffer(songfile)
+	newSongFile.store_buffer(buffer)
 
 func customSort(a,b):
 	return a.beat < b.beat
