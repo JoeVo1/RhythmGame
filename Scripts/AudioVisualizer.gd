@@ -1,20 +1,19 @@
 extends Node2D
  
 @onready
-var spectrum = AudioServer.get_bus_effect_instance(1,0)
+var spectrum = AudioServer.get_bus_effect_instance(3,0)
  
 @onready
 var swatches = $Swatches.get_children()
  
 const VU_COUNT = 64
-const HEIGHT = 3000
+const HEIGHT = 1000
 const FREQ_MAX = 11050.0
  
 const MIN_DB = 70
 var volume = 0.0
 
 func _ready():
-	$AudioStreamPlayer.volume_db = SaveSettings.readData().audio
 	var i = 0
 	for swatch in swatches:
 		swatch.self_modulate = Color(i,i,i)
@@ -50,14 +49,6 @@ func playSong(songPath):
 		return
 	$AudioStreamPlayer.stream = AudioStreamOggVorbis.load_from_file(songPath + '/' + song)
 	$AudioStreamPlayer.play()
-
-func setVolume(vol):
-	$AudioStreamPlayer.volume_db += vol
-	volume = $AudioStreamPlayer.volume_db
-
-func initVolume(vol):
-	$AudioStreamPlayer.volume_db = vol
-	volume = $AudioStreamPlayer.volume_db
 
 
 func _on_audio_stream_player_finished():

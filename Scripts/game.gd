@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var conductor = $Conductor
-@onready var songSelection = preload("res://Scripts/SongSelection.gd")
+var songSelection = load("res://Scenes/SongSelection.tscn")
 var path
 var songPath
 var dataPath
@@ -16,11 +16,16 @@ var delay
 var color: Color
 var approachRate = 2
 var changingScene = false
+var prevVol
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Doors.set_process(false)
 	$Transition.play("fade_in")
-	conductor.volume_db = SaveSettings.readData().audio
+	var data = SaveSettings.readData()
+	AudioServer.set_bus_volume_db(0, data.master)
+	AudioServer.set_bus_volume_db(1, data.music)
+	AudioServer.set_bus_volume_db(2, data.sfx)
+	$VolumeBar.value = AudioServer.get_bus_volume_db(0)
 	for file in DirAccess.get_files_at(path):
 		if(file.ends_with(".ogg")):
 			songPath = path + '/' + file
@@ -41,13 +46,13 @@ func _unhandled_input(event):
 		$Panel.visible = true
 	if(event is InputEventMouseButton):
 		if(event.button_index == MOUSE_BUTTON_WHEEL_UP):
-			conductor.volume_db += 1.04
-			$VolumeBar.value = conductor.volume_db
+			AudioServer.set_bus_volume_db(0, $VolumeBar.value + 1.04)
+			$VolumeBar.value = AudioServer.get_bus_volume_db(0)
 			showVolumeBar()
 			return
 		if(event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
-			conductor.volume_db -= 1.04
-			$VolumeBar.value = conductor.volume_db
+			AudioServer.set_bus_volume_db(0, $VolumeBar.value -1.04)
+			$VolumeBar.value = AudioServer.get_bus_volume_db(0)
 			showVolumeBar()
 
 func _on_conductor_beat(position):
@@ -101,7 +106,7 @@ func _on_back_btn_button_down():
 	if(changingScene):
 		return
 	changingScene = true
-	SaveSettings.writeData(conductor.volume_db)
+	SaveSettings.writeData()
 	$Transition.play("fade_out")
 	await $Transition.animation_finished
 	get_tree().current_scene = self
@@ -116,7 +121,7 @@ func _on_conductor_song_finished():
 	$FinishTimer.wait_time = conductor.sec_per_beat * 4
 	$FinishTimer.start()
 	await $FinishTimer.timeout
-	SaveSettings.writeData(conductor.volume_db)
+	SaveSettings.writeData()
 	$Doors.set_process(true)
 	$Doors.closeDoors()
 
@@ -126,3 +131,16 @@ func showVolumeBar() -> void:
 	$Timer.start()
 	await $Timer.timeout
 	$VolumeBar.visible = false
+
+
+func _on_back_to_song_list_btn_pressed():
+	if(changingScene):
+		return
+	changingScene = true
+	SaveSettings.writeData()
+	$Transition.play("fade_out")
+	await $Transition.animation_finished
+	var instance = songSelection.instantiate()
+	instance.changeGameScene(0)
+	get_parent().add_child(instance)
+	queue_free()

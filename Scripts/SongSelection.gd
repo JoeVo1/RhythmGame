@@ -39,9 +39,6 @@ func _unhandled_key_input(event):
 		SetColor(0)
 	
 	if(event.is_action_pressed("ui_accept")):
-		if(changingScene):
-			return
-		changingScene = true
 		$Transition.play("fade_out")
 		await $Transition.animation_finished
 		loadSong(0)
@@ -84,6 +81,9 @@ func changeGameScene(sceneIndex):
 		SetColor(j)
 
 func loadSong(value):
+	if(changingScene):
+			return
+	changingScene = true
 	songToPlay = dir[curPos + value]
 	var GameInstance = sceneToUse.instantiate()
 	GameInstance.path = path + songToPlay

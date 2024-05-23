@@ -115,7 +115,7 @@ centered = false
 
 [node name="Conductor" parent="." instance=ExtResource("4_agx0j")]
 stream = SubResource("AudioStream_26cnw")
-volume_db = 24.0
+bus = &"Music"
 
 [node name="Node" type="Node" parent="."]
 
@@ -321,6 +321,15 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 50
 text = "Perfect: "
 
+[node name="BackToSongListBtn" type="Button" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 1220.0
+offset_top = 50.0
+offset_right = 1536.49
+offset_bottom = 150.001
+theme_override_font_sizes/font_size = 50
+text = "Back"
+
 [node name="Transition" parent="." instance=ExtResource("15_fe18q")]
 
 [node name="FinishTimer" type="Timer" parent="."]
@@ -333,3 +342,4 @@ position = Vector2(0, 567)
 [connection signal="songFinished" from="Conductor" to="." method="_on_conductor_song_finished"]
 [connection signal="button_down" from="Panel/BackBtn" to="." method="_on_back_btn_button_down"]
 [connection signal="button_down" from="Panel/CancelBtn" to="." method="_on_cancel_btn_button_down"]
+[connection signal="pressed" from="Doors/Panel/BackToSongListBtn" to="." method="_on_back_to_song_list_btn_pressed"]

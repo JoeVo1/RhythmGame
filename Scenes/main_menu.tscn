@@ -1,11 +1,14 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6qut1teuwudk"]
+[gd_scene load_steps=17 format=3 uid="uid://c6qut1teuwudk"]
 
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_oqj31"]
+[ext_resource type="Texture2D" uid="uid://b3snpv6xmdfma" path="res://Assets/sliderBtn.png" id="2_8wuif"]
+[ext_resource type="Script" path="res://Scripts/SettingsMenu.gd" id="2_dif4n"]
 [ext_resource type="PackedScene" uid="uid://c6n5p8l5rren5" path="res://Prefabs/audio_visualizer.tscn" id="2_i2jmd"]
+[ext_resource type="Texture2D" uid="uid://wgya4icmuy3d" path="res://Assets/sliderBtnn.png" id="3_dpxxq"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="3_m1d8i"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="4_jsqoh"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="5_sunvn"]
-[ext_resource type="Script" path="res://Scenes/SFX.gd" id="6_p2nvd"]
+[ext_resource type="Script" path="res://Scripts/SFX.gd" id="9_nrjcv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74css"]
 bg_color = Color(0.1741, 0.358487, 1, 1)
@@ -37,18 +40,38 @@ Button/font_sizes/font_size = 60
 Button/styles/hover = SubResource("StyleBoxFlat_74css")
 Button/styles/normal = SubResource("StyleBoxFlat_38s8s")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pufor"]
+bg_color = Color(7.70092e-07, 0.641469, 0.93153, 1)
+border_width_right = 5
+border_width_bottom = 15
+border_color = Color(0.259207, 0.196599, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 15.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_32shs"]
 content_margin_left = 500.0
-content_margin_top = 40.0
+content_margin_top = 30.0
 bg_color = Color(0, 0, 0, 1)
 border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 35
-corner_radius_top_right = 35
-corner_radius_bottom_right = 35
-corner_radius_bottom_left = 35
+corner_radius_top_left = 1024
+corner_radius_top_right = 1024
+corner_radius_bottom_right = 1024
+corner_radius_bottom_left = 1024
+shadow_size = 5
+shadow_offset = Vector2(0, 3)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eodfd"]
-bg_color = Color(0.409545, 0.576156, 1, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ds4v"]
+bg_color = Color(6.01634e-09, 0.163143, 0.0586826, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0rbjs"]
+bg_color = Color(7.21961e-07, 0.321488, 0.196136, 1)
+corner_radius_top_left = 1024
+corner_radius_bottom_left = 1024
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -62,8 +85,24 @@ script = ExtResource("1_oqj31")
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="VolumeBar" type="TextureProgressBar" parent="Camera2D"]
+visible = false
+z_index = 1
+offset_left = 1819.0
+offset_top = 979.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+min_value = -80.0
+max_value = 24.0
+value = -80.0
+fill_mode = 4
+texture_under = ExtResource("3_m1d8i")
+texture_progress = ExtResource("4_jsqoh")
 
 [node name="PlayBtn" type="Button" parent="."]
+top_level = true
 layout_mode = 0
 offset_left = 710.0
 offset_top = 100.0
@@ -74,6 +113,7 @@ theme = SubResource("Theme_mg802")
 text = "Play"
 
 [node name="EditBtn" type="Button" parent="."]
+top_level = true
 layout_mode = 0
 offset_left = 710.0
 offset_top = 270.0
@@ -85,6 +125,7 @@ text = "Edit
 "
 
 [node name="SettingsBtn" type="Button" parent="."]
+top_level = true
 layout_mode = 0
 offset_left = 710.0
 offset_top = 440.0
@@ -95,6 +136,7 @@ theme = SubResource("Theme_mg802")
 text = "Settings"
 
 [node name="QuitBtn" type="Button" parent="."]
+top_level = true
 layout_mode = 0
 offset_left = 710.0
 offset_top = 610.0
@@ -108,31 +150,72 @@ text = "Quit"
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("2_dif4n")
 
-[node name="HSlider" type="HSlider" parent="SettingsMenu"]
-offset_left = 2136.0
-offset_top = 108.0
-offset_right = 2636.0
-offset_bottom = 318.735
-theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_eodfd")
-
-[node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
-
-[node name="VolumeBar" type="TextureProgressBar" parent="."]
-visible = false
-z_index = 1
+[node name="PanelContainer" type="PanelContainer" parent="SettingsMenu"]
 layout_mode = 0
-offset_left = 1819.0
-offset_top = 979.0
-offset_right = 1920.0
-offset_bottom = 1080.0
+offset_left = 2020.0
+offset_top = 100.0
+offset_right = 2520.0
+offset_bottom = 164.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pufor")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label3" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Master Volume"
+horizontal_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("3_dpxxq")
+theme_override_icons/grabber_highlight = ExtResource("2_8wuif")
+theme_override_icons/grabber_disabled = ExtResource("3_dpxxq")
+theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
 min_value = -80.0
 max_value = 24.0
-value = -80.0
-fill_mode = 4
-texture_under = ExtResource("3_m1d8i")
-texture_progress = ExtResource("4_jsqoh")
+
+[node name="Label" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Music Volume"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("3_dpxxq")
+theme_override_icons/grabber_highlight = ExtResource("2_8wuif")
+theme_override_icons/grabber_disabled = ExtResource("3_dpxxq")
+theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
+min_value = -80.0
+max_value = 0.0
+
+[node name="Label2" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "SFX Volume"
+horizontal_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="SettingsMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("3_dpxxq")
+theme_override_icons/grabber_highlight = ExtResource("2_8wuif")
+theme_override_icons/grabber_disabled = ExtResource("3_dpxxq")
+theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
+min_value = -80.0
+max_value = 0.0
+
+[node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 1.5
@@ -140,7 +223,8 @@ wait_time = 1.5
 [node name="Transition" parent="." instance=ExtResource("5_sunvn")]
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-script = ExtResource("6_p2nvd")
+bus = &"SFX"
+script = ExtResource("9_nrjcv")
 
 [connection signal="button_down" from="PlayBtn" to="." method="_on_play_btn_button_down"]
 [connection signal="mouse_entered" from="PlayBtn" to="SFX" method="hover"]
@@ -150,3 +234,6 @@ script = ExtResource("6_p2nvd")
 [connection signal="mouse_entered" from="SettingsBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="QuitBtn" to="." method="_on_quit_btn_button_down"]
 [connection signal="mouse_entered" from="QuitBtn" to="SFX" method="hover"]
+[connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MasterSlider" to="SettingsMenu" method="_on_master_slider_value_changed"]
+[connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MusicSlider" to="SettingsMenu" method="_on_music_slider_value_changed"]
+[connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/SFXSlider" to="SettingsMenu" method="_on_sfx_slider_value_changed"]
