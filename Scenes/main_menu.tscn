@@ -180,6 +180,7 @@ theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
 min_value = -80.0
 max_value = 24.0
+value = -80.0
 
 [node name="Label" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -195,8 +196,10 @@ theme_override_icons/grabber_disabled = ExtResource("3_dpxxq")
 theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
 theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
-min_value = -80.0
+min_value = -60.0
 max_value = 0.0
+value = -60.0
+scrollable = false
 
 [node name="Label2" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -212,8 +215,20 @@ theme_override_icons/grabber_disabled = ExtResource("3_dpxxq")
 theme_override_styles/slider = SubResource("StyleBoxFlat_32shs")
 theme_override_styles/grabber_area = SubResource("StyleBoxFlat_7ds4v")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_0rbjs")
-min_value = -80.0
+min_value = -60.0
 max_value = 0.0
+value = -60.0
+
+[node name="BackBtn" type="Button" parent="SettingsMenu"]
+top_level = true
+layout_mode = 0
+offset_left = 2020.0
+offset_top = 610.0
+offset_right = 2520.0
+offset_bottom = 710.0
+pivot_offset = Vector2(250, 0)
+theme = SubResource("Theme_mg802")
+text = "Menu"
 
 [node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
 
@@ -237,3 +252,5 @@ script = ExtResource("9_nrjcv")
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MasterSlider" to="SettingsMenu" method="_on_master_slider_value_changed"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MusicSlider" to="SettingsMenu" method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/SFXSlider" to="SettingsMenu" method="_on_sfx_slider_value_changed"]
+[connection signal="button_down" from="SettingsMenu/BackBtn" to="." method="_on_back_btn_button_down"]
+[connection signal="mouse_entered" from="SettingsMenu/BackBtn" to="SFX" method="hover"]

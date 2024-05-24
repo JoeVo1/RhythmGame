@@ -4,6 +4,7 @@ var songSelection = load("res://Scenes/SongSelection.tscn")
 var files = DirAccess.get_directories_at("user://Songs/")
 var SettingsMenuPos = Vector2(1920, 0)
 var settings: bool = false
+var changingScene = false
 
 func _ready():
 	var data = SaveSettings.readData()
@@ -26,6 +27,9 @@ func PlayMusic():
 
 
 func _on_play_btn_button_down():
+	if(changingScene):
+		return
+	changingScene = true
 	$Transition.play("fade_out")
 	await $Transition.animation_finished
 	saveSettings()
@@ -36,6 +40,9 @@ func _on_play_btn_button_down():
 
 
 func _on_edit_btn_button_down():
+	if(changingScene):
+		return
+	changingScene = true
 	$Transition.play("fade_out")
 	await $Transition.animation_finished
 	saveSettings()
@@ -89,3 +96,9 @@ func saveSettings():
 	SaveSettings.musicVol = $SettingsMenu/PanelContainer/VBoxContainer/MusicSlider.value
 	SaveSettings.masterVol = AudioServer.get_bus_volume_db(0)
 	SaveSettings.writeData()
+
+func _on_back_btn_button_down():
+	if(settings):
+		$Camera2D.position = Vector2(0,0)
+		settings = false
+		return

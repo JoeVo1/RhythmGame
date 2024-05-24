@@ -39,6 +39,9 @@ func _ready():
 				songPath = path + '/' + file
 			elif(file.ends_with(".json")):
 				dataPath = path + '/' + file
+		if(dataPath == null):
+			FileAccess.open(path + '/' + "data.json", FileAccess.WRITE)
+			dataPath = path + '/' + "data.json"
 		songData = parseFile(dataPath)
 		conductor.loadSong(songPath,bpm,delay)
 		maxBeats = conductor.song_length_in_beats
@@ -63,9 +66,40 @@ func _ready():
 		$UI/Markers.add_child(Instance)
 		Instance.position.x = offset * value + 30
 		Instance.position.y -= 108
+	AudioServer.set_bus_volume_db(0, SaveSettings.masterVol)
+	AudioServer.set_bus_volume_db(1, SaveSettings.musicVol)
+	AudioServer.set_bus_volume_db(2, SaveSettings.SFXVol)
+	$UI/VolumeBar.value = AudioServer.get_bus_volume_db(0)
+	$Transition.play("fade_in")
 
+
+func _unhandled_input(event):
+	if($Transition.is_playing()):
+		return
+	if(event is InputEventMouseButton):
+		if(event.button_index == MOUSE_BUTTON_WHEEL_UP):
+			$UI/ScrollContainer.scroll_horizontal += offset
+			if(pos == conductor.song_length_in_beats):
+				return
+			pos +=1
+		if(event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
+			$UI/ScrollContainer.scroll_horizontal -= offset
+			if(pos == 0):
+				return
+			pos -=1
 
 func _unhandled_key_input(event):
+	if($Transition.is_playing()):
+		return
+	if(event.as_text() == "Equal"):
+		AudioServer.set_bus_volume_db(0, $UI/VolumeBar.value + 1.04)
+		$UI/VolumeBar.value = AudioServer.get_bus_volume_db(0)
+		showVolumeBar()
+		return
+	if(event.as_text() == "Minus"):
+		AudioServer.set_bus_volume_db(0, $UI/VolumeBar.value -1.04)
+		$UI/VolumeBar.value = AudioServer.get_bus_volume_db(0)
+		showVolumeBar()
 	if(event.is_action_pressed("ui_cancel")):
 		if(selectedNote != null):
 			selectNote(selectedNote, false)
@@ -104,6 +138,7 @@ func _unhandled_key_input(event):
 			return
 		zoom +=1
 		Zoom(-10)
+	
 	if(event.as_text() == "Space"):
 		if(!conductor.stream_paused):
 			conductor.stream_paused = true
@@ -146,8 +181,12 @@ func RemoveNote(markerPos):
 	var beat = pos + markerPos
 	if(not allNotes.has(beat)):
 		return
+	if(selectedNote == beat):
+		selectedNote = null
 	allNotes[beat].queue_free()
 	allNotes.erase(beat)
+	for draggable in Draggables:
+		draggable.ClearTexture()
 
 
 func selectNote(beat, on):
@@ -197,6 +236,9 @@ func parseFile(_path):
 	data = JSON.parse_string(data)
 	bpm = data.bpm
 	delay = data.delay
+	print(data.color)
+	$UI/ColorPicker.color = str_to_var(data.color)
+	SelectorColor = str_to_var(data.color)
 	if data.has("sorted"):
 		return data.charts[0].notes
 	data.charts[0].notes.sort_custom(customSort)
@@ -225,9 +267,8 @@ func writeFile():
 	if(SelectorColor != null):
 		data["color"] = SelectorColor
 	else:
-		data["color"] = var_to_str(Color(1,1,1,1))
+		data["color"] = Color(1,1,1,1)
 	if(path == "user://Songs/New Map"):
-		
 		while(true):
 			if(DirAccess.dir_exists_absolute(path + str(i))):
 				i+=1
@@ -236,10 +277,13 @@ func writeFile():
 		var dir = DirAccess.make_dir_absolute(path + str(i))
 		var file = FileAccess.open(path + str(i) + "/data.json", FileAccess.WRITE)
 		file.store_string(JSON.stringify(data))
-	var songfile = FileAccess.open(songPath, FileAccess.READ)
-	var buffer = songfile.get_buffer(songfile.get_length())
-	var newSongFile = FileAccess.open(path + str(i) + "/song.ogg", FileAccess.WRITE)
-	newSongFile.store_buffer(buffer)
+		var newSongFile = FileAccess.open(path + str(i) + "/song.ogg", FileAccess.WRITE)
+		var songfile = FileAccess.open(songPath, FileAccess.READ)
+		var buffer = songfile.get_buffer(songfile.get_length())
+		newSongFile.store_buffer(buffer)
+	else:
+		var file = FileAccess.open(dataPath, FileAccess.WRITE)
+		file.store_string(JSON.stringify(data))
 
 func customSort(a,b):
 	return a.beat < b.beat
@@ -272,6 +316,8 @@ func on_file_dropped(file):
 	conductor.loadSong(songPath,bpm,delay)
 	conductor.stream_paused = true
 	$UI/ScrollContainer/HBoxContainer/ColorRect.size.x = (conductor.song_length_in_beats * offset) + 2400
+	maxBeats = conductor.song_length_in_beats
+	$UI/FileBtn.text = file[0].get_file()
 
 
 func _on_file_btn_button_down():
@@ -290,6 +336,8 @@ func _on_file_dialog_file_selected(_path):
 
 
 func dropped(drag):
+	if(selectedNote == null):
+		return
 	var on
 	for draggable in Draggables:
 		if(draggable.on):
@@ -315,3 +363,10 @@ func _on_cancel_btn_button_down():
 
 func _on_color_picker_color_changed(color):
 	SelectorColor = var_to_str(color)
+
+func showVolumeBar() -> void:
+	$UI/VolumeBar.visible = true
+	$Timer.wait_time = (1)
+	$Timer.start()
+	await $Timer.timeout
+	$UI/VolumeBar.visible = false

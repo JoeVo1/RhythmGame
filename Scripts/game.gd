@@ -62,11 +62,12 @@ func _on_conductor_beat(position):
 	if note.beat - approachRate <= position:
 		spawnNote(int(note.lane), note.label)
 		currentBeat +=1
-	if(maxBeats > currentBeat - 1):
+		if(note.beat == songData[currentBeat].beat):
+			spawnNote(int(songData[currentBeat].lane), songData[currentBeat].label)
+			print(songData[currentBeat])
+	if(maxBeats < currentBeat - 1):
 		return
-	while note.beat == songData[currentBeat + 1].beat:
-		spawnNote(int(songData[currentBeat + 1].lane), songData[currentBeat + 1].label)
-		currentBeat +=1
+	
 
 func _physics_process(delta):
 	$TextureProgressBar.value = conductor.song_position

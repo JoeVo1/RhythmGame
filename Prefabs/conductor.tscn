@@ -6,4 +6,5 @@
 
 [node name="Conductor" type="AudioStreamPlayer"]
 stream = SubResource("AudioStreamMP3_csfda")
+bus = &"Music"
 script = ExtResource("1_3ls7n")
