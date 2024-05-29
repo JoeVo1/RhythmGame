@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://o3bgo06nobmf"]
+[gd_scene load_steps=18 format=3 uid="uid://o3bgo06nobmf"]
 
 [ext_resource type="Script" path="res://Scripts/editor.gd" id="1_0upao"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_jj87p"]
@@ -8,14 +8,17 @@
 [ext_resource type="Texture2D" uid="uid://dcl0temup2d50" path="res://Assets/bgunder.png" id="6_2iorp"]
 [ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="7_8wike"]
 [ext_resource type="PackedScene" uid="uid://bhmltkjbf66ns" path="res://Prefabs/NoteCollider.tscn" id="8_i671c"]
+[ext_resource type="Script" path="res://Scripts/editor_UI.gd" id="9_hn66p"]
 [ext_resource type="Texture2D" uid="uid://6f428qxavjb0" path="res://Assets/progressBarBG.png" id="9_mp68s"]
-[ext_resource type="PackedScene" uid="uid://cfq051g3strxy" path="res://Prefabs/DragAndDrop.tscn" id="9_tfeca"]
 [ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="10_mm36i"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="12_31a4h"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="13_62xbf"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="14_ke8q8"]
 
 [sub_resource type="AudioStream" id="AudioStream_75wtw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0bwyw"]
+size = Vector2(1920, 210)
 
 [sub_resource type="Theme" id="Theme_et0fp"]
 default_font_size = 40
@@ -66,25 +69,46 @@ stream = SubResource("AudioStream_75wtw")
 [node name="NoteCollider" parent="Colliders" instance=ExtResource("8_i671c")]
 position = Vector2(1708, 135)
 
-[node name="Draggable" parent="Colliders/NoteCollider" instance=ExtResource("9_tfeca")]
-
 [node name="noteCollider" parent="Colliders" instance=ExtResource("8_i671c")]
 position = Vector2(1708, 405)
-
-[node name="Draggable" parent="Colliders/noteCollider" instance=ExtResource("9_tfeca")]
-i = 1
 
 [node name="noteCollider2" parent="Colliders" instance=ExtResource("8_i671c")]
 position = Vector2(1708, 675)
 
-[node name="Draggable" parent="Colliders/noteCollider2" instance=ExtResource("9_tfeca")]
-i = 2
-
 [node name="noteCollider3" parent="Colliders" instance=ExtResource("8_i671c")]
 position = Vector2(1708, 945)
 
-[node name="Draggable" parent="Colliders/noteCollider3" instance=ExtResource("9_tfeca")]
-i = 3
+[node name="Area2D" type="Area2D" parent="Colliders" groups=["drag"]]
+z_index = 3
+position = Vector2(960, 135)
+metadata/lane = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Area2D"]
+shape = SubResource("RectangleShape2D_0bwyw")
+
+[node name="Area2D2" type="Area2D" parent="Colliders" groups=["drag"]]
+z_index = 3
+position = Vector2(960, 405)
+metadata/lane = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Area2D2"]
+shape = SubResource("RectangleShape2D_0bwyw")
+
+[node name="Area2D3" type="Area2D" parent="Colliders" groups=["drag"]]
+z_index = 3
+position = Vector2(960, 675)
+metadata/lane = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Area2D3"]
+shape = SubResource("RectangleShape2D_0bwyw")
+
+[node name="Area2D4" type="Area2D" parent="Colliders" groups=["drag"]]
+z_index = 3
+position = Vector2(960, 945)
+metadata/lane = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Area2D4"]
+shape = SubResource("RectangleShape2D_0bwyw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -216)
@@ -92,6 +116,7 @@ anchor_mode = 0
 zoom = Vector2(0.8, 0.8)
 
 [node name="UI" type="Node" parent="."]
+script = ExtResource("9_hn66p")
 
 [node name="FPSCounter" type="Label" parent="UI"]
 z_index = 2
@@ -129,11 +154,6 @@ step = 0.0
 texture_under = ExtResource("9_mp68s")
 texture_progress = ExtResource("10_mm36i")
 
-[node name="ColorRect" type="ColorRect" parent="UI"]
-custom_minimum_size = Vector2(2400, 216)
-offset_top = -216.0
-offset_right = 2400.0
-
 [node name="ScrollContainer" type="ScrollContainer" parent="UI"]
 top_level = true
 offset_top = -216.0
@@ -147,7 +167,7 @@ layout_mode = 2
 [node name="Node2D" type="Node2D" parent="UI/ScrollContainer/HBoxContainer"]
 
 [node name="ColorRect" type="ColorRect" parent="UI/ScrollContainer/HBoxContainer"]
-custom_minimum_size = Vector2(30000, 216)
+custom_minimum_size = Vector2(2400, 216)
 layout_mode = 2
 
 [node name="Markers" type="Node2D" parent="UI"]
@@ -211,6 +231,7 @@ access = 2
 
 [node name="Panel" type="Panel" parent="UI"]
 visible = false
+z_index = 3
 offset_left = 700.0
 offset_top = 200.0
 offset_right = 1842.0
@@ -261,12 +282,13 @@ texture_progress = ExtResource("13_62xbf")
 [node name="Transition" parent="." instance=ExtResource("14_ke8q8")]
 
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
-[connection signal="value_changed" from="UI/BPM" to="." method="_on_bpm_value_changed"]
-[connection signal="value_changed" from="UI/Delay" to="." method="_on_delay_value_changed"]
-[connection signal="value_changed" from="UI/ApproachRate" to="." method="_on_approach_rate_value_changed"]
-[connection signal="button_down" from="UI/FileBtn" to="." method="_on_file_btn_button_down"]
-[connection signal="button_down" from="UI/SaveBtn" to="." method="_on_save_btn_button_down"]
-[connection signal="file_selected" from="UI/FileDialog" to="." method="_on_file_dialog_file_selected"]
-[connection signal="button_down" from="UI/Panel/BackBtn" to="." method="_on_back_btn_button_down"]
-[connection signal="button_down" from="UI/Panel/CancelBtn" to="." method="_on_cancel_btn_button_down"]
-[connection signal="color_changed" from="UI/ColorPicker" to="." method="_on_color_picker_color_changed"]
+[connection signal="finished" from="Conductor" to="." method="_on_conductor_finished"]
+[connection signal="value_changed" from="UI/BPM" to="UI" method="_on_bpm_value_changed"]
+[connection signal="value_changed" from="UI/Delay" to="UI" method="_on_delay_value_changed"]
+[connection signal="value_changed" from="UI/ApproachRate" to="UI" method="_on_approach_rate_value_changed"]
+[connection signal="button_down" from="UI/FileBtn" to="UI" method="_on_file_btn_button_down"]
+[connection signal="button_down" from="UI/SaveBtn" to="UI" method="_on_save_btn_button_down"]
+[connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_file_dialog_file_selected"]
+[connection signal="button_down" from="UI/Panel/BackBtn" to="UI" method="_on_back_btn_button_down"]
+[connection signal="button_down" from="UI/Panel/CancelBtn" to="UI" method="_on_cancel_btn_button_down"]
+[connection signal="color_changed" from="UI/ColorPicker" to="UI" method="_on_color_picker_color_changed"]

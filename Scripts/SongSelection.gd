@@ -7,6 +7,7 @@ var sceneToUse
 var mainMenu = preload("res://Scenes/main_menu.tscn")
 var gameScene = preload("res://Scenes/game.tscn")
 var editorScene = preload("res://Scenes/edit.tscn")
+var noSongs = preload(("res://Prefabs/noSongs.tscn"))
 var pos1 = 0.0
 var pos2 = 0.0
 var MaxPos
@@ -21,6 +22,8 @@ var changingScene = false
 
 func _physics_process(delta):
 	$ScrollContainer.scroll_vertical = lerp(float($ScrollContainer.scroll_vertical), float(pos2), switchSpeed * delta)
+	if(noteGUIs.is_empty()):
+		return
 	noteGUIs[curPos].scale = lerp(Vector2(noteGUIs[curPos].scale), Vector2(1.05,1.05), 0.1)
 
 func _input(event):
@@ -93,6 +96,8 @@ func changeGameScene(sceneIndex):
 		i+=1
 	for j in clamp(noteGUIs.size(), 0, 8):
 		SetColor(j)
+	if(dir.is_empty()):
+		add_child(noSongs.instantiate())
 	await $Transition.animation_finished
 	changingScene = false
 	var data = SaveSettings.readData()

@@ -6,13 +6,12 @@ var mainMenu = preload("res://Scenes/main_menu.tscn")
 var path
 var songPath
 var dataPath
-var Note = preload("res://Prefabs/note.tscn")
+var Note = preload("res://Prefabs/edit_note.tscn")
 var accuracy = preload("res://Scripts/noteCollider.gd")
 var Marker = preload("res://Prefabs/marker.tscn")
 var NoteGUI = preload("res://Prefabs/note_gui.tscn")
-@onready var Draggables = [$Colliders/NoteCollider/Draggable, $Colliders/noteCollider/Draggable, $Colliders/noteCollider2/Draggable, $Colliders/noteCollider3/Draggable]
-var NoteTexture = preload("res://Assets/Note.png")
 var offset = 80
+var beatOffset = 3
 var NoteInstance
 var bpm
 var songData
@@ -23,13 +22,14 @@ var approachRate = 2
 var zoom = 2
 var pos = 0
 var allNotes = {}
+var editorNotes: Dictionary
 var playFrom = 0
 var selectedNote
 var SelectorColor = null
 var saveFolder = null
-# Called when the node enters the scene tree for the first time.
+var ended = false
+
 func _ready():
-	get_viewport().files_dropped.connect(on_file_dropped)
 	if(path == "user://Songs/New Map"):
 		bpm = 100
 		delay = 0
@@ -45,10 +45,11 @@ func _ready():
 		songData = parseFile(dataPath)
 		conductor.loadSong(songPath,bpm,delay)
 		maxBeats = conductor.song_length_in_beats
+		EditNote.frozen = true
 		conductor.stream_paused = true
-		$UI/ScrollContainer/HBoxContainer/ColorRect.size.x = (conductor.song_length_in_beats * offset) + 2400
+		$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * offset)
 		$UI/FileBtn.text = songPath.get_file()
-		
+		$UI/TextureProgressBar.max_value = conductor.song_length
 		for note in songData:
 			var Instance = NoteGUI.instantiate()
 			Instance.beat = note.beat
@@ -66,31 +67,44 @@ func _ready():
 		$UI/Markers.add_child(Instance)
 		Instance.position.x = offset * value + 30
 		Instance.position.y -= 108
+	$UI/Markers.get_children()[beatOffset].texture = load("res://Assets/Marker01.png")
 	AudioServer.set_bus_volume_db(0, SaveSettings.masterVol)
 	AudioServer.set_bus_volume_db(1, SaveSettings.musicVol)
 	AudioServer.set_bus_volume_db(2, SaveSettings.SFXVol)
 	$UI/VolumeBar.value = AudioServer.get_bus_volume_db(0)
 	$Transition.play("fade_in")
 
+func _physics_process(_delta):
+	$UI/TextureProgressBar.value = conductor.song_position
+	$UI/FPSCounter.text = "FPS:\n" + str(Engine.get_frames_per_second())
+	if(conductor.playing):
+		$UI/ScrollContainer.scroll_horizontal = conductor.song_position / conductor.sec_per_beat * offset - offset * 4 - 4 * offset + 30
 
 func _unhandled_input(event):
 	if($Transition.is_playing()):
 		return
-	if(event is InputEventMouseButton):
+	if(event is InputEventMouseButton && event.is_pressed()):
 		if(event.button_index == MOUSE_BUTTON_WHEEL_UP):
-			$UI/ScrollContainer.scroll_horizontal += offset
-			if(pos == conductor.song_length_in_beats):
-				return
-			pos +=1
+			moveBar(1)
+			return
 		if(event.button_index == MOUSE_BUTTON_WHEEL_DOWN):
-			$UI/ScrollContainer.scroll_horizontal -= offset
-			if(pos == 0):
-				return
-			pos -=1
+			moveBar(-1)
 
 func _unhandled_key_input(event):
 	if($Transition.is_playing()):
 		return
+	if(event.as_text() == "Space" && event.is_pressed()):
+		if(!conductor.stream_paused):
+			conductor.stream_paused = true
+			EditNote.pause = true
+			$UI/ScrollContainer.scroll_horizontal = playFrom
+			ended = false
+			return
+		currentBeat = pos + beatOffset
+		playFrom = currentBeat * offset
+		EditNote.frozen = false
+		EditNote.pause = false
+		conductor.play_from_beat(pos)
 	if(event.as_text() == "Equal"):
 		AudioServer.set_bus_volume_db(0, $UI/VolumeBar.value + 1.04)
 		$UI/VolumeBar.value = AudioServer.get_bus_volume_db(0)
@@ -104,30 +118,26 @@ func _unhandled_key_input(event):
 		if(selectedNote != null):
 			selectNote(selectedNote, false)
 			selectedNote = null
-			for draggable in Draggables:
-				draggable.ClearTexture()
-		else:
-			$UI/Panel.visible = true
-		if(!conductor.stream_paused):
-			conductor.stream_paused = !conductor.stream_paused
+		elif(!conductor.stream_paused || ended):
+			conductor.stream_paused = true
+			EditNote.pause = true
+			EditNote.frozen = true
 			$UI/ScrollContainer.scroll_horizontal = playFrom
+			ended = false
+		else:
+			$UI/Panel.visible = !$UI/Panel.visible
 	if(conductor.playing):
 		return
 	if(selectedNote != null):
 		if(event.as_text().length() > 1):
 			return
 		allNotes[selectedNote].changeLabel(event.as_text())
+		editorNotes[selectedNote].changeLabel(event.as_text())
 		return
 	if(event.is_action_pressed("ui_left")):
-		$UI/ScrollContainer.scroll_horizontal -= offset
-		if(pos == 0):
-			return
-		pos -=1
+		moveBar(-1)
 	if(event.is_action_pressed("ui_right")):
-		$UI/ScrollContainer.scroll_horizontal += offset
-		if(pos == conductor.song_length_in_beats):
-			return
-		pos +=1
+		moveBar(1)
 	if(event.is_action_pressed("ui_up")):
 		if(zoom == -4):
 			return
@@ -138,17 +148,6 @@ func _unhandled_key_input(event):
 			return
 		zoom +=1
 		Zoom(-10)
-	
-	if(event.as_text() == "Space"):
-		if(!conductor.stream_paused):
-			conductor.stream_paused = true
-			return
-		currentBeat = pos + 4
-		if(currentBeat < 4):
-			currentBeat = 4
-		playFrom = pos * offset
-		conductor.play_from_beat(pos)
-
 
 func Zoom(value):
 	offset += value
@@ -158,8 +157,8 @@ func Zoom(value):
 		j += 1
 	for i in $UI/ScrollContainer/HBoxContainer/Node2D.get_children():
 		i.position.x = offset * i.beat + 30
+	$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * offset)
 	$UI/ScrollContainer.scroll_horizontal = pos * offset
-
 
 func AddNote(markerPos):
 	if(conductor.playing):
@@ -174,7 +173,6 @@ func AddNote(markerPos):
 	allNotes[int(beat)] = Instance
 	Instance.position.x = offset * beat + 30
 
-
 func RemoveNote(markerPos):
 	if(conductor.playing):
 		return
@@ -185,18 +183,16 @@ func RemoveNote(markerPos):
 		selectedNote = null
 	allNotes[beat].queue_free()
 	allNotes.erase(beat)
-	for draggable in Draggables:
-		draggable.ClearTexture()
-
 
 func selectNote(beat, on):
 	if(selectedNote != null):
 		allNotes[selectedNote].selectNote(false)
+		if(editorNotes.has(beat)):
+			editorNotes[beat].selectNote(false)
 	selectedNote = beat
 	allNotes[beat].selectNote(on)
-	for draggable in Draggables:
-		draggable.ClearTexture()
-	Draggables[allNotes[beat].lane].TextureNote(NoteTexture)
+	if(editorNotes.has(beat)):
+		editorNotes[beat].selectNote(on)
 
 func _on_conductor_beat(position):
 	if(maxBeats <= currentBeat):
@@ -214,12 +210,6 @@ func _on_conductor_beat(position):
 		spawnNote(int(songData[currentBeat + 1].lane), songData[currentBeat + 1].label)
 		currentBeat +=1
 
-func _physics_process(_delta):
-	$UI/TextureProgressBar.value = conductor.song_position
-	$UI/FPSCounter.text = "FPS:\n" + str(Engine.get_frames_per_second())
-	if(conductor.playing):
-		$UI/ScrollContainer.scroll_horizontal = conductor.song_position / conductor.sec_per_beat * offset - offset * 4
-
 func updateScore():
 	$UI/ComboLabel.text = str(accuracy.combo)
 	$UI/AccuracyLabel.text = str(accuracy.TotalScore / accuracy.notesHit)
@@ -236,7 +226,6 @@ func parseFile(_path):
 	data = JSON.parse_string(data)
 	bpm = data.bpm
 	delay = data.delay
-	print(data.color)
 	$UI/ColorPicker.color = str_to_var(data.color)
 	SelectorColor = str_to_var(data.color)
 	if data.has("sorted"):
@@ -265,9 +254,9 @@ func writeFile():
 	notesDic["notes"] = notes
 	data["charts"] = [notesDic]
 	if(SelectorColor != null):
-		data["color"] = SelectorColor
+		data["color"] = var_to_str(SelectorColor)
 	else:
-		data["color"] = Color(1,1,1,1)
+		data["color"] = var_to_str(Color(1,1,1,1))
 	if(path == "user://Songs/New Map"):
 		while(true):
 			if(DirAccess.dir_exists_absolute(path + str(i))):
@@ -285,84 +274,52 @@ func writeFile():
 		var file = FileAccess.open(dataPath, FileAccess.WRITE)
 		file.store_string(JSON.stringify(data))
 
+func moveBar(value: int):
+	if(pos == conductor.song_length_in_beats || value < 0 && pos == 0):
+		return
+	$UI/ScrollContainer.scroll_horizontal += offset * value
+	pos += value
+	pos += 3
+	spawnEditorNotes()
+	pos -= 3
+
+func spawnEditorNotes():
+	for node in $Notes.get_children():
+		node.queue_free()
+	var i = 0
+	var max = pos + 7
+	var _offset = 3
+	while true:
+		if(allNotes.has(pos + i)):
+			if(allNotes[pos + i].beat < max):
+				getPos(pos + i)
+				i+=1
+			else:
+				break
+		else:
+			if(allNotes.is_empty() || i > allNotes.values().back().beat):
+				break
+			i+=1
+
+func getPos(_pos):
+	var beat = allNotes[_pos]
+	NoteInstance = Note.instantiate()
+	$Notes.add_child(NoteInstance)
+	NoteInstance.initialize(int(beat.lane), str(beat.label), approachRate)
+	NoteInstance.changePos(pos + 7 - beat.beat)
+	NoteInstance.beat = _pos
+	editorNotes[_pos] = NoteInstance
+
 func customSort(a,b):
 	return a.beat < b.beat
 
-
-func _on_bpm_value_changed(value):
-	bpm = value
-	conductor.loadSong(songPath,bpm,delay)
-	conductor.stream_paused = true
-
-
-func _on_delay_value_changed(value):
-	delay = value
-	conductor.loadSong(songPath,bpm,delay)
-	conductor.stream_paused = true
-
-
-func _on_approach_rate_value_changed(value):
-	approachRate = value
-
-
-func on_file_dropped(file):
-	if(file.size() != 1):
-		print("only 1")
-		return
-	if(!file[0].ends_with(".ogg")):
-		print("incorrect File Type")
-		return
-	songPath = file[0]
-	conductor.loadSong(songPath,bpm,delay)
-	conductor.stream_paused = true
-	$UI/ScrollContainer/HBoxContainer/ColorRect.size.x = (conductor.song_length_in_beats * offset) + 2400
-	maxBeats = conductor.song_length_in_beats
-	$UI/FileBtn.text = file[0].get_file()
-
-
-func _on_file_btn_button_down():
-	$UI/FileDialog.current_dir = "/Users"
-	$UI/FileDialog.visible = !$UI/FileDialog.visible
-	maxBeats = conductor.song_length_in_beats
-
-
-func _on_file_dialog_file_selected(_path):
-	songPath = _path
-	$UI/FileBtn.text = _path.get_file()
-	conductor.loadSong(songPath,bpm,delay)
-	conductor.stream_paused = true
-	$UI/ScrollContainer/HBoxContainer/ColorRect.size.x = (conductor.song_length_in_beats * offset) + 2400
-	maxBeats = conductor.song_length_in_beats
-
-
 func dropped(drag):
+	print("drioped")
 	if(selectedNote == null):
 		return
 	var on
-	for draggable in Draggables:
-		if(draggable.on):
-			on = draggable
-			break
-	on.ClearTexture()
 	drag.on = true
 	allNotes[selectedNote].lane = drag.i
-
-
-func _on_save_btn_button_down():
-	writeFile()
-
-
-func _on_back_btn_button_down():
-	get_tree().current_scene = self
-	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
-
-
-func _on_cancel_btn_button_down():
-	$UI/Panel.visible = false
-
-
-func _on_color_picker_color_changed(color):
-	SelectorColor = var_to_str(color)
 
 func showVolumeBar() -> void:
 	$UI/VolumeBar.visible = true
@@ -370,3 +327,8 @@ func showVolumeBar() -> void:
 	$Timer.start()
 	await $Timer.timeout
 	$UI/VolumeBar.visible = false
+
+func _on_conductor_finished():
+	ended = true
+	conductor.play()
+	conductor.stream_paused = true

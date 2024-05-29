@@ -5,8 +5,10 @@ var files = DirAccess.get_directories_at("user://Songs/")
 var SettingsMenuPos = Vector2(1920, 0)
 var settings: bool = false
 var changingScene = false
+var len = 0
 
 func _ready():
+	$Camera2D/GPUParticles2D.emitting = true
 	var data = SaveSettings.readData()
 	AudioServer.set_bus_volume_db(0, data.master)
 	$SettingsMenu/PanelContainer/VBoxContainer/MasterSlider.value = data.master
@@ -23,6 +25,9 @@ func _ready():
 
 
 func PlayMusic():
+	if(files.is_empty() || files.size() < len):
+		return
+	len += 1
 	$AudioVisualizer.playSong(files[rng.randi_range(0,files.size() - 1)])
 
 

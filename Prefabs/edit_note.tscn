@@ -1,0 +1,91 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmegak8kr5fww"]
+
+[ext_resource type="Script" path="res://Scripts/edit_note.gd" id="1_fbxre"]
+[ext_resource type="Texture2D" uid="uid://brtmov2a3i6x2" path="res://Assets/Note.png" id="2_qh6w7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8uoit"]
+size = Vector2(30, 30)
+
+[sub_resource type="Curve" id="Curve_vf387"]
+_data = [Vector2(0.00561798, 1), 0.0, 0.0, 0, 0, Vector2(0.988764, 0), -3.05143, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_tf8g2"]
+colors = PackedColorArray(5.96821e-06, 0.720326, 0.941886, 1, 9.14484e-07, 0.754452, 0.442112, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ocbrq"]
+bg_color = Color(0.952941, 0.352941, 0.584314, 0)
+corner_radius_top_left = 105
+corner_radius_top_right = 105
+corner_radius_bottom_right = 105
+corner_radius_bottom_left = 105
+
+[node name="EditNote" type="Area2D" groups=["note"]]
+priority = 1
+script = ExtResource("1_fbxre")
+
+[node name="Score" type="Sprite2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_qh6w7")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -75.0
+offset_top = -100.0
+offset_right = 75.0
+offset_bottom = 100.0
+pivot_offset = Vector2(75, 100)
+theme_override_font_sizes/font_size = 146
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_8uoit")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 32
+lifetime = 0.5
+one_shot = true
+speed_scale = 1.5
+explosiveness = 0.93
+direction = Vector2(0, 0)
+spread = 180.0
+initial_velocity_min = 300.0
+initial_velocity_max = 400.0
+scale_amount_min = 5.0
+scale_amount_max = 15.0
+scale_amount_curve = SubResource("Curve_vf387")
+color_ramp = SubResource("Gradient_tf8g2")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="SelectBtn" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.0
+offset_top = -105.0
+offset_right = 105.0
+offset_bottom = 105.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ocbrq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ocbrq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ocbrq")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_ocbrq")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ocbrq")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="button_down" from="SelectBtn" to="." method="_on_select_btn_button_down"]
+[connection signal="mouse_entered" from="SelectBtn" to="." method="_on_select_btn_mouse_entered"]
+[connection signal="mouse_exited" from="SelectBtn" to="." method="_on_select_btn_mouse_exited"]

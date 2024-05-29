@@ -42,7 +42,7 @@ func playSong(songPath):
 	var song = null
 	songPath = "user://Songs/" + songPath
 	for file in DirAccess.get_files_at(songPath):
-		if(file.ends_with("ogg")):
+		if(file.ends_with(".ogg")):
 			song = file
 	if(song == null):
 		get_parent().PlayMusic()

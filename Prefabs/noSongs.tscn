@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://dia2y8fagafkc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gpamo"]
+bg_color = Color(0, 0.700018, 0.580723, 1)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.343803, 0.294224, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_size = 15
+shadow_offset = Vector2(0, 10.67)
+
+[node name="Node2D" type="Sprite2D"]
+
+[node name="Label" type="Label" parent="."]
+offset_left = 551.1
+offset_top = 120.0
+offset_right = 1368.1
+offset_bottom = 325.0
+theme_override_font_sizes/font_size = 128
+theme_override_styles/normal = SubResource("StyleBoxFlat_gpamo")
+text = "No Songs... :("

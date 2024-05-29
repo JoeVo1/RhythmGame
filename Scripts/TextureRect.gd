@@ -29,7 +29,9 @@ func _drop_data(_pos, data):
 func ClearTexture():
 	on = false
 	texture = null
+	$Label.text = null
 
-func TextureNote(tex):
+func TextureNote(tex, _char):
 	texture = tex
 	on = true
+	$Label.text = _char
