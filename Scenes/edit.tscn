@@ -209,14 +209,32 @@ offset_left = 2020.0
 offset_top = 255.0
 offset_right = 2400.0
 offset_bottom = 335.0
+focus_mode = 0
+text = "Select Audio File"
 alignment = 0
 clip_text = true
 
+[node name="ColorPickerBtn" type="Button" parent="UI"]
+offset_left = 2020.0
+offset_top = 340.0
+offset_right = 2400.0
+offset_bottom = 420.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Select Color"
+
+[node name="ColorPicker" type="ColorPicker" parent="UI"]
+offset_left = 2020.0
+offset_top = 425.0
+offset_right = 2400.0
+offset_bottom = 1001.0
+
 [node name="SaveBtn" type="Button" parent="UI"]
 offset_left = 2020.0
-offset_top = 980.0
+offset_top = 1054.0
 offset_right = 2400.0
-offset_bottom = 1060.0
+offset_bottom = 1134.0
+focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "Save"
 
@@ -243,6 +261,7 @@ offset_left = 310.0
 offset_top = 100.0
 offset_right = 850.001
 offset_bottom = 200.001
+focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "Main Menu"
 
@@ -252,14 +271,9 @@ offset_left = 310.0
 offset_top = 400.0
 offset_right = 850.0
 offset_bottom = 500.0
+focus_mode = 0
 theme_override_font_sizes/font_size = 50
 text = "Cancel"
-
-[node name="ColorPicker" type="ColorPicker" parent="UI"]
-offset_left = 2020.0
-offset_top = 395.0
-offset_right = 2400.0
-offset_bottom = 971.0
 
 [node name="VolumeBar" type="TextureProgressBar" parent="UI"]
 visible = false
@@ -287,8 +301,9 @@ texture_progress = ExtResource("13_62xbf")
 [connection signal="value_changed" from="UI/Delay" to="UI" method="_on_delay_value_changed"]
 [connection signal="value_changed" from="UI/ApproachRate" to="UI" method="_on_approach_rate_value_changed"]
 [connection signal="button_down" from="UI/FileBtn" to="UI" method="_on_file_btn_button_down"]
+[connection signal="button_down" from="UI/ColorPickerBtn" to="UI" method="_on_color_picker_btn_button_down"]
+[connection signal="color_changed" from="UI/ColorPicker" to="UI" method="_on_color_picker_color_changed"]
 [connection signal="button_down" from="UI/SaveBtn" to="UI" method="_on_save_btn_button_down"]
 [connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_file_dialog_file_selected"]
 [connection signal="button_down" from="UI/Panel/BackBtn" to="UI" method="_on_back_btn_button_down"]
 [connection signal="button_down" from="UI/Panel/CancelBtn" to="UI" method="_on_cancel_btn_button_down"]
-[connection signal="color_changed" from="UI/ColorPicker" to="UI" method="_on_color_picker_color_changed"]

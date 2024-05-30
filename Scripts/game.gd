@@ -33,13 +33,17 @@ func _ready():
 			dataPath = path + '/' + file
 	songData = parseFile(dataPath)
 	conductor.loadSong(songPath,bpm,delay)
-	$TextureProgressBar.max_value = conductor.song_length
+	$TextureProgressBar.max_value = conductor.song_length - 2
 	color *= 0.2
 	color.a = 1
 	$Doors/DoorAni/Top.self_modulate = color
 	$Doors/DoorAni/Bottem.self_modulate = color
 
 func _unhandled_input(event):
+	if(event.is_pressed() && event.as_text().length() == 1):
+		$BackGrounds/ColliderBg.self_modulate.a = 0.05
+	else:
+		$BackGrounds/ColliderBg.self_modulate.a = 0
 	if(event.is_action_pressed("ui_cancel")):
 		conductor.stream_paused = true
 		note_.pause = true
@@ -56,25 +60,25 @@ func _unhandled_input(event):
 			showVolumeBar()
 
 func _on_conductor_beat(position):
-	if(maxBeats == currentBeat):
+	if(maxBeats <= currentBeat):
 		return
 	var note = songData[currentBeat]
 	if note.beat - approachRate <= position:
 		spawnNote(int(note.lane), note.label)
 		currentBeat +=1
+		if(!songData.has(currentBeat)):
+			return
 		if(note.beat == songData[currentBeat].beat):
 			spawnNote(int(songData[currentBeat].lane), songData[currentBeat].label)
-			print(songData[currentBeat])
 	if(maxBeats < currentBeat - 1):
 		return
-	
 
 func _physics_process(delta):
 	$TextureProgressBar.value = conductor.song_position
 
 func updateScore():
-	$ComboLabel.text = str(accuracy.combo)
-	$AccuracyLabel.text = str(accuracy.TotalScore / accuracy.notesHit)
+	$ComboLabel.text = 'x' + str(accuracy.combo)
+	$AccuracyLabel.text = str(accuracy.TotalScore / accuracy.notesHit) + '%'
 
 func spawnNote(lane, _char):
 	NoteInstance = Note.instantiate()

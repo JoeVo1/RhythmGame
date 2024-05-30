@@ -8,7 +8,7 @@ var changingScene = false
 var len = 0
 
 func _ready():
-	$Camera2D/GPUParticles2D.emitting = true
+	$CPUParticles2D.emitting = true
 	var data = SaveSettings.readData()
 	AudioServer.set_bus_volume_db(0, data.master)
 	$SettingsMenu/PanelContainer/VBoxContainer/MasterSlider.value = data.master

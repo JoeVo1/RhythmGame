@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3 uid="uid://l1deg16sx81j"]
+
+[ext_resource type="Shader" path="res://blackHoleShader.gdshader" id="1_g6cye"]
+[ext_resource type="Texture2D" uid="uid://brtmov2a3i6x2" path="res://Assets/Note.png" id="2_cqxtx"]
+
+[sub_resource type="Curve" id="Curve_dbu5w"]
+_data = [Vector2(0, 0.527472), 0.0, 0.0, 0, 0, Vector2(0.213333, 0.32967), 0.0, 0.0, 0, 0, Vector2(0.393333, 0.593407), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_01xh4"]
+width = 2048
+curve = SubResource("Curve_dbu5w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dtnd3"]
+shader = ExtResource("1_g6cye")
+shader_parameter/strength = 0.5
+shader_parameter/curve = SubResource("CurveTexture_01xh4")
+
+[node name="BlackHole" type="Sprite2D"]
+material = SubResource("ShaderMaterial_dtnd3")
+texture = ExtResource("2_cqxtx")
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2

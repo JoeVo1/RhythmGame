@@ -1,13 +1,14 @@
-[gd_scene load_steps=21 format=3 uid="uid://5ohg8jqi2k34"]
+[gd_scene load_steps=22 format=3 uid="uid://5ohg8jqi2k34"]
 
 [ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
 [ext_resource type="Texture2D" uid="uid://dcl0temup2d50" path="res://Assets/bgunder.png" id="3_05xn2"]
 [ext_resource type="Texture2D" uid="uid://j8nhpmpxphbh" path="res://Assets/fade.png" id="3_vrf2l"]
 [ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="4_agx0j"]
-[ext_resource type="Texture2D" uid="uid://poxst8mqweh6" path="res://Assets/laneBG.png" id="4_ujogh"]
+[ext_resource type="Texture2D" uid="uid://covut57guquxm" path="res://Assets/laneBG.png" id="4_ujogh"]
 [ext_resource type="PackedScene" uid="uid://bhmltkjbf66ns" path="res://Prefabs/NoteCollider.tscn" id="5_npedt"]
 [ext_resource type="Texture2D" uid="uid://6f428qxavjb0" path="res://Assets/progressBarBG.png" id="7_mug53"]
+[ext_resource type="Texture2D" uid="uid://mjsjlejbdi4s" path="res://Assets/ColliderBG.png" id="7_uj7r0"]
 [ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="8_uaxxu"]
 [ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="9_rnyqd"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="11_bn4rh"]
@@ -121,25 +122,31 @@ texture = ExtResource("9_rnyqd")
 centered = false
 
 [node name="Sprite2D7" type="Sprite2D" parent="BackGrounds"]
-position = Vector2(0, -54)
+position = Vector2(0, -57)
+scale = Vector2(1, 1.056)
 texture = ExtResource("3_05xn2")
+centered = false
+
+[node name="ColliderBg" type="Sprite2D" parent="BackGrounds"]
+self_modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_uj7r0")
 centered = false
 
 [node name="Conductor" parent="." instance=ExtResource("4_agx0j")]
 stream = SubResource("AudioStream_26cnw")
 
-[node name="Node" type="Node" parent="."]
+[node name="Colliders" type="Node" parent="."]
 
-[node name="NoteCollider" parent="Node" instance=ExtResource("5_npedt")]
+[node name="NoteCollider" parent="Colliders" instance=ExtResource("5_npedt")]
 position = Vector2(1708, 135)
 
-[node name="noteCollider" parent="Node" instance=ExtResource("5_npedt")]
+[node name="noteCollider" parent="Colliders" instance=ExtResource("5_npedt")]
 position = Vector2(1708, 405)
 
-[node name="noteCollider2" parent="Node" instance=ExtResource("5_npedt")]
+[node name="noteCollider2" parent="Colliders" instance=ExtResource("5_npedt")]
 position = Vector2(1708, 675)
 
-[node name="noteCollider3" parent="Node" instance=ExtResource("5_npedt")]
+[node name="noteCollider3" parent="Colliders" instance=ExtResource("5_npedt")]
 position = Vector2(1708, 945)
 
 [node name="Camera2D" type="Camera2D" parent="."]

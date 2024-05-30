@@ -103,6 +103,7 @@ func changeGameScene(sceneIndex):
 	var data = SaveSettings.readData()
 	AudioServer.set_bus_volume_db(0, data.master)
 	AudioServer.set_bus_volume_db(1, data.music)
+	playSong(dir[0])
 
 func loadSong(value):
 	if(curPos + value > MaxPos):
@@ -145,5 +146,16 @@ func playSong(fileName):
 		$Music.play("MusicFadeIn")
 		$Music/AudioStreamPlayer.stream = AudioStreamOggVorbis.load_from_file("user://Songs/" + fileName + "/" + song)
 		$Music/AudioStreamPlayer.play()
+		if(curPos > dir.size() - 1 || dir[curPos] == "New Map"):
+			return
+		var dataPath = null
+		for file in DirAccess.get_files_at(path + str(dir[curPos])):
+			if(file.ends_with(".json")):
+				dataPath = path + dir[curPos] + '/' + file
+		if(dataPath == null):
+			return
+		var songData: Dictionary = parseFile(dataPath)
+		$Bg.self_modulate = str_to_var(songData.color) / 6
+		$Bg.self_modulate.a = 1
 	else:
 		$Music/AudioStreamPlayer.stop()

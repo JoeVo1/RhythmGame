@@ -101,7 +101,7 @@ func _unhandled_key_input(event):
 			ended = false
 			return
 		currentBeat = pos + beatOffset
-		playFrom = currentBeat * offset
+		playFrom = pos * offset
 		EditNote.frozen = false
 		EditNote.pause = false
 		conductor.play_from_beat(pos)
@@ -132,7 +132,8 @@ func _unhandled_key_input(event):
 		if(event.as_text().length() > 1):
 			return
 		allNotes[selectedNote].changeLabel(event.as_text())
-		editorNotes[selectedNote].changeLabel(event.as_text())
+		if(editorNotes.has(selectedNote)):
+			editorNotes[selectedNote].changeLabel(event.as_text())
 		return
 	if(event.is_action_pressed("ui_left")):
 		moveBar(-1)
@@ -171,6 +172,8 @@ func AddNote(markerPos):
 	$UI/ScrollContainer/HBoxContainer/Node2D.add_child(Instance)
 	Instance.beat = beat
 	allNotes[int(beat)] = Instance
+	editorNotes[int(beat)] = Instance
+	spawnEditorNotes()
 	Instance.position.x = offset * beat + 30
 
 func RemoveNote(markerPos):
@@ -183,6 +186,9 @@ func RemoveNote(markerPos):
 		selectedNote = null
 	allNotes[beat].queue_free()
 	allNotes.erase(beat)
+	if(editorNotes.has(beat)):
+		editorNotes[beat].queue_free()
+		editorNotes.erase(beat)
 
 func selectNote(beat, on):
 	if(selectedNote != null):
@@ -279,11 +285,11 @@ func moveBar(value: int):
 		return
 	$UI/ScrollContainer.scroll_horizontal += offset * value
 	pos += value
-	pos += 3
 	spawnEditorNotes()
-	pos -= 3
 
 func spawnEditorNotes():
+	editorNotes.clear()
+	pos += 3
 	for node in $Notes.get_children():
 		node.queue_free()
 	var i = 0
@@ -300,6 +306,7 @@ func spawnEditorNotes():
 			if(allNotes.is_empty() || i > allNotes.values().back().beat):
 				break
 			i+=1
+	pos -= 3
 
 func getPos(_pos):
 	var beat = allNotes[_pos]

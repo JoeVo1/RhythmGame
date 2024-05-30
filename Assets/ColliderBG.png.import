@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://covut57guquxm"
-path="res://.godot/imported/laneBG.png-6e8bd9f631f9dd0a6af3bfa47a6a0e7f.ctex"
+uid="uid://mjsjlejbdi4s"
+path="res://.godot/imported/ColliderBG.png-54250c0975c322f3e20cba63e56ab614.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/laneBG.png"
-dest_files=["res://.godot/imported/laneBG.png-6e8bd9f631f9dd0a6af3bfa47a6a0e7f.ctex"]
+source_file="res://Assets/ColliderBG.png"
+dest_files=["res://.godot/imported/ColliderBG.png-54250c0975c322f3e20cba63e56ab614.ctex"]
 
 [params]
 

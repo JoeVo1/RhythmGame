@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://xlgdfegog77e"]
+[gd_scene load_steps=7 format=3 uid="uid://xlgdfegog77e"]
 
 [ext_resource type="Script" path="res://Scripts/SongSelection.gd" id="1_7ad2l"]
 [ext_resource type="Texture2D" uid="uid://btwava1ekqde3" path="res://Assets/arrow.png" id="2_36y4i"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="4_0cbcg"]
+[ext_resource type="Texture2D" uid="uid://c8eaxm6vrv7df" path="res://Assets/stars-2643089_1920.jpg" id="4_apc45"]
 
 [sub_resource type="Animation" id="Animation_fhh5o"]
 resource_name = "MusicFadeIn"
@@ -38,9 +39,9 @@ vertical_scroll_mode = 3
 layout_mode = 2
 
 [node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer"]
+z_index = -6
 custom_minimum_size = Vector2(1920, 1)
 layout_mode = 2
-color = Color(0.0362374, 1.44392e-07, 0.294699, 1)
 
 [node name="Arrows" type="Node2D" parent="ScrollContainer"]
 position = Vector2(960, 140)
@@ -62,4 +63,11 @@ libraries = {
 }
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Music"]
+volume_db = -30.0
 bus = &"Music"
+
+[node name="Bg" type="Sprite2D" parent="."]
+self_modulate = Color(0.140447, 0.140447, 0.140447, 1)
+z_index = -5
+position = Vector2(960, 640)
+texture = ExtResource("4_apc45")

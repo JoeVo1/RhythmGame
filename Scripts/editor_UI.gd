@@ -58,3 +58,6 @@ func _on_file_dialog_file_selected(_path):
 func loadSong():
 	editor.conductor.loadSong(editor.songPath,editor.bpm,editor.delay)
 	editor.conductor.stream_paused = true
+
+func _on_color_picker_btn_button_down():
+	$ColorPicker.visible = !$ColorPicker.visible
