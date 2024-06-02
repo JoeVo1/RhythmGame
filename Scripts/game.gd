@@ -16,9 +16,9 @@ var delay
 var color: Color
 var approachRate = 2
 var changingScene = false
-var prevVol
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
+	note_.pause = false
 	$Doors.set_process(false)
 	$Transition.play("fade_in")
 	var data = SaveSettings.readData()
@@ -34,7 +34,7 @@ func _ready():
 	songData = parseFile(dataPath)
 	conductor.loadSong(songPath,bpm,delay)
 	$TextureProgressBar.max_value = conductor.song_length - 2
-	color *= 0.2
+	color *= 0.3
 	color.a = 1
 	$Doors/DoorAni/Top.self_modulate = color
 	$Doors/DoorAni/Bottem.self_modulate = color
@@ -78,9 +78,12 @@ func _physics_process(delta):
 
 func updateScore():
 	$ComboLabel.text = 'x' + str(accuracy.combo)
-	$AccuracyLabel.text = str(accuracy.TotalScore / accuracy.notesHit) + '%'
+	var acc = accuracy.TotalScore / accuracy.notesHit
+	$AccuracyLabel.text = str(acc) + '%'
+	$AccuracyLabel/TextureProgressBar2.value = acc
 
 func spawnNote(lane, _char):
+	print(currentBeat)
 	NoteInstance = Note.instantiate()
 	$Notes.add_child(NoteInstance)
 	NoteInstance.initialize(lane, _char, approachRate)
@@ -149,3 +152,9 @@ func _on_back_to_song_list_btn_pressed():
 	instance.changeGameScene(0)
 	get_parent().add_child(instance)
 	queue_free()
+
+func noteHit(hit):
+	if(hit == true):
+		$SFX.PlayHitSound(true)
+	else:
+		$SFX.PlayHitSound(hit)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://5ohg8jqi2k34"]
+[gd_scene load_steps=24 format=3 uid="uid://5ohg8jqi2k34"]
 
 [ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
@@ -11,7 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://mjsjlejbdi4s" path="res://Assets/ColliderBG.png" id="7_uj7r0"]
 [ext_resource type="Texture2D" uid="uid://uy2lsos6ojxj" path="res://Assets/ProgressBarOver.png" id="8_uaxxu"]
 [ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="9_rnyqd"]
+[ext_resource type="Texture2D" uid="uid://bc5rbqcjgwy" path="res://Assets/acc.png" id="10_y46l4"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="11_bn4rh"]
+[ext_resource type="Texture2D" uid="uid://dm1sk2d0ywbpg" path="res://Assets/accprogress.png" id="11_kelcf"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="12_se3sn"]
 [ext_resource type="Script" path="res://Scripts/ClosingDoors.gd" id="13_hrdxn"]
 [ext_resource type="Texture2D" uid="uid://2a7e7mwactfc" path="res://Assets/closingScene.png" id="14_lnmbo"]
@@ -167,10 +169,26 @@ vertical_alignment = 1
 [node name="AccuracyLabel" type="Label" parent="."]
 z_index = 2
 offset_left = 1915.0
+offset_top = 25.0
 offset_right = 2026.0
-offset_bottom = 51.0
+offset_bottom = 76.0001
+theme_override_colors/font_color = Color(1, 0.85522, 0.989672, 1)
 theme_override_font_sizes/font_size = 37
+text = "100%"
 horizontal_alignment = 1
+
+[node name="TextureProgressBar2" type="TextureProgressBar" parent="AccuracyLabel"]
+self_modulate = Color(1, 1, 1, 0.4)
+z_index = -1
+layout_mode = 0
+offset_left = 5.0
+offset_top = -25.0
+offset_right = 106.0
+offset_bottom = 76.0
+value = 100.0
+fill_mode = 4
+texture_under = ExtResource("10_y46l4")
+texture_progress = ExtResource("11_kelcf")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="."]
 offset_top = -50.0

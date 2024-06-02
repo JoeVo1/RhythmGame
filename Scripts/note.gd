@@ -1,10 +1,7 @@
 class_name note_
 extends Area2D
 
-const lane1 = Vector2(-50,135)
-const lane2 = Vector2(-50,405)
-const lane3 = Vector2(-50,675)
-const lane4 = Vector2(-50,945)
+const lanes = [Vector2(-50,135),Vector2(-50,405),Vector2(-50,675),Vector2(-50,945)]
 var speed
 static var pause : bool = false
 @onready var scoreLabels = [preload("res://Assets/miss.png"), preload("res://Assets/ok.png"), preload("res://Assets/good.png"), preload("res://Assets/perfect.png")]
@@ -18,15 +15,7 @@ func initialize(lane, _char, beatsToGoal):
 	speed = abs(distance/beatsToGoal)
 	letter = _char
 	label.text = letter
-	match lane:
-		0:
-			position = lane1
-		1:
-			position = lane2
-		2:
-			position = lane3
-		3:
-			position = lane4
+	position = lanes[lane]
 
 func _physics_process(delta):
 	if(pause):

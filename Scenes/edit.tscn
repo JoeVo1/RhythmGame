@@ -1,9 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://o3bgo06nobmf"]
+[gd_scene load_steps=19 format=3 uid="uid://o3bgo06nobmf"]
 
 [ext_resource type="Script" path="res://Scripts/editor.gd" id="1_0upao"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_jj87p"]
 [ext_resource type="Texture2D" uid="uid://j8nhpmpxphbh" path="res://Assets/fade.png" id="3_nsyi2"]
-[ext_resource type="Texture2D" uid="uid://poxst8mqweh6" path="res://Assets/laneBG.png" id="4_5nqx1"]
+[ext_resource type="Texture2D" uid="uid://covut57guquxm" path="res://Assets/laneBG.png" id="4_5nqx1"]
 [ext_resource type="Texture2D" uid="uid://duha318pwi42l" path="res://Assets/BackGroundaddition.png" id="5_1lyxh"]
 [ext_resource type="Texture2D" uid="uid://dcl0temup2d50" path="res://Assets/bgunder.png" id="6_2iorp"]
 [ext_resource type="PackedScene" uid="uid://db0fywdu13jpu" path="res://Prefabs/conductor.tscn" id="7_8wike"]
@@ -14,8 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="12_31a4h"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="13_62xbf"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="14_ke8q8"]
+[ext_resource type="Script" path="res://Scripts/SFX.gd" id="15_fb06a"]
 
-[sub_resource type="AudioStream" id="AudioStream_75wtw"]
+[sub_resource type="AudioStream" id="AudioStream_wb365"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0bwyw"]
 size = Vector2(1920, 210)
@@ -62,7 +63,7 @@ texture = ExtResource("6_2iorp")
 centered = false
 
 [node name="Conductor" parent="." instance=ExtResource("7_8wike")]
-stream = SubResource("AudioStream_75wtw")
+stream = SubResource("AudioStream_wb365")
 
 [node name="Colliders" type="Node" parent="."]
 
@@ -224,10 +225,28 @@ theme_override_font_sizes/font_size = 50
 text = "Select Color"
 
 [node name="ColorPicker" type="ColorPicker" parent="UI"]
+visible = false
 offset_left = 2020.0
 offset_top = 425.0
 offset_right = 2400.0
 offset_bottom = 1001.0
+
+[node name="LevelName" type="LineEdit" parent="UI"]
+offset_left = 2020.0
+offset_top = 425.0
+offset_right = 2400.0
+offset_bottom = 505.0
+placeholder_text = "Enter Name Here"
+max_length = 20
+
+[node name="Difficulty" type="SpinBox" parent="UI"]
+offset_left = 2020.0
+offset_top = 510.0
+offset_right = 2320.0
+offset_bottom = 590.0
+theme = SubResource("Theme_et0fp")
+max_value = 10.0
+prefix = "Difficulty:"
 
 [node name="SaveBtn" type="Button" parent="UI"]
 offset_left = 2020.0
@@ -295,6 +314,9 @@ texture_progress = ExtResource("13_62xbf")
 
 [node name="Transition" parent="." instance=ExtResource("14_ke8q8")]
 
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+script = ExtResource("15_fb06a")
+
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
 [connection signal="finished" from="Conductor" to="." method="_on_conductor_finished"]
 [connection signal="value_changed" from="UI/BPM" to="UI" method="_on_bpm_value_changed"]
@@ -303,6 +325,7 @@ texture_progress = ExtResource("13_62xbf")
 [connection signal="button_down" from="UI/FileBtn" to="UI" method="_on_file_btn_button_down"]
 [connection signal="button_down" from="UI/ColorPickerBtn" to="UI" method="_on_color_picker_btn_button_down"]
 [connection signal="color_changed" from="UI/ColorPicker" to="UI" method="_on_color_picker_color_changed"]
+[connection signal="value_changed" from="UI/Difficulty" to="UI" method="_on_approach_rate_value_changed"]
 [connection signal="button_down" from="UI/SaveBtn" to="UI" method="_on_save_btn_button_down"]
 [connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_file_dialog_file_selected"]
 [connection signal="button_down" from="UI/Panel/BackBtn" to="UI" method="_on_back_btn_button_down"]

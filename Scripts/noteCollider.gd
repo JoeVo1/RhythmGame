@@ -5,6 +5,7 @@ var miss
 var okay
 var good
 var perfect
+var game
 var currentNote = []
 static var okayScore = 0
 static var goodScore = 0
@@ -13,6 +14,16 @@ static var misses = 0
 static var TotalScore = 0
 static var notesHit = 0
 static var combo = 0
+
+func _ready():
+	okayScore = 0
+	goodScore = 0
+	perfectScore = 0
+	misses = 0
+	TotalScore = 0
+	notesHit = 0
+	combo = 0
+	game = get_parent().get_parent()
 
 func _unhandled_key_input(event):
 	if(currentNote.is_empty() || !event.is_pressed()):
@@ -23,20 +34,24 @@ func _unhandled_key_input(event):
 				combo +=1
 				TotalScore += 100
 				perfectScore += 1
+				game.noteHit(true)
 				currentNote[0].destroy(3)
 			good:
 				combo +=1
 				TotalScore += 50
 				goodScore += 1
+				game.noteHit(true)
 				currentNote[0].destroy(2)
 			okay:
 				combo +=1
 				TotalScore += 20
 				okayScore += 1
+				game.noteHit(true)
 				currentNote[0].destroy(1)
 			miss:
 				misses += 1
 				combo = 0
+				game.noteHit(false)
 				currentNote[0].destroy(0)
 		notesHit += 1
 		get_parent().get_parent().updateScore()

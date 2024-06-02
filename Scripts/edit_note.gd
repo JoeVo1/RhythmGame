@@ -24,9 +24,6 @@ func initialize(lane, _char, beatsToGoal):
 	initLane = lane
 	position = lanes[lane]
 
-
-
-
 func _physics_process(delta):
 	if(pause || frozen):
 		return
@@ -60,21 +57,15 @@ func changePos(pos):
 	position.x = 1708 / 7 * pos
 	xPos = position.x
 
-
 func selectNote(select):
 	if(select):
 		$Sprite2D.self_modulate = Color(4,4,4,4)
 	else:
 		$Sprite2D.self_modulate = Color(1,1,1,1)
 
-
 func changeLabel(text):
 	$Label.text = text
 	label = text
-
-
-func _on_select_btn_button_down():
-	get_tree().root.get_child(0).selectNote(beat, true)
 
 func _process(delta):
 	if(!draggable):
@@ -94,17 +85,24 @@ func _on_area_entered(area):
 	if(area.is_in_group("drag")):
 		bodyRef = area
 
-
 func _on_area_exited(area):
 	if(area.is_in_group("drag")):
 		bodyRef = null
-
 
 func _on_select_btn_mouse_entered():
 	draggable = true
 	scale = Vector2(1.05,1.05)
 
-
 func _on_select_btn_mouse_exited():
 	draggable = false
 	scale = Vector2(1,1)
+
+
+func _on_select_btn_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_LEFT:
+				get_tree().root.get_child(0).selectNote(beat, true)
+			MOUSE_BUTTON_RIGHT:
+				get_tree().root.get_child(0).RemoveNote(beat, false)
+	

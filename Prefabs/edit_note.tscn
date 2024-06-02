@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmegak8kr5fww"]
+[gd_scene load_steps=11 format=3 uid="uid://dmegak8kr5fww"]
 
 [ext_resource type="Script" path="res://Scripts/edit_note.gd" id="1_fbxre"]
 [ext_resource type="Texture2D" uid="uid://brtmov2a3i6x2" path="res://Assets/Note.png" id="2_qh6w7"]
@@ -13,12 +13,15 @@ point_count = 2
 [sub_resource type="Gradient" id="Gradient_tf8g2"]
 colors = PackedColorArray(5.96821e-06, 0.720326, 0.941886, 1, 9.14484e-07, 0.754452, 0.442112, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ocbrq"]
-bg_color = Color(0.952941, 0.352941, 0.584314, 0)
-corner_radius_top_left = 105
-corner_radius_top_right = 105
-corner_radius_bottom_right = 105
-corner_radius_bottom_left = 105
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r4n3o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tur3y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dsimb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5rxgy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iy3uc"]
 
 [node name="EditNote" type="Area2D" groups=["note"]]
 priority = 1
@@ -75,17 +78,16 @@ offset_right = 105.0
 offset_bottom = 105.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_ocbrq")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ocbrq")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ocbrq")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_ocbrq")
-theme_override_styles/focus = SubResource("StyleBoxFlat_ocbrq")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_r4n3o")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_tur3y")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dsimb")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_5rxgy")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_iy3uc")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="button_down" from="SelectBtn" to="." method="_on_select_btn_button_down"]
+[connection signal="gui_input" from="SelectBtn" to="." method="_on_select_btn_gui_input"]
 [connection signal="mouse_entered" from="SelectBtn" to="." method="_on_select_btn_mouse_entered"]
 [connection signal="mouse_exited" from="SelectBtn" to="." method="_on_select_btn_mouse_exited"]

@@ -50,7 +50,7 @@ func on_file_dropped(file):
 
 func _on_file_dialog_file_selected(_path):
 	editor.songPath = _path
-	$UI/FileBtn.text = _path.get_file()
+	$FileBtn.text = _path.get_file()
 	loadSong()
 	$ScrollContainer/HBoxContainer/ColorRect.size.x = (editor.conductor.song_length_in_beats * editor.offset) + 2400
 	editor.maxBeats = editor.conductor.song_length_in_beats

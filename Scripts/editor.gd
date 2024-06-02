@@ -28,12 +28,14 @@ var selectedNote
 var SelectorColor = null
 var saveFolder = null
 var ended = false
+var levelName = ""
 
 func _ready():
 	if(path == "user://Songs/New Map"):
 		bpm = 100
 		delay = 0
 	else:
+		$UI/LevelName.text = levelName
 		for file in DirAccess.get_files_at(path):
 			if(file.ends_with(".ogg")):
 				songPath = path + '/' + file
@@ -45,8 +47,8 @@ func _ready():
 		songData = parseFile(dataPath)
 		conductor.loadSong(songPath,bpm,delay)
 		maxBeats = conductor.song_length_in_beats
-		EditNote.frozen = true
 		conductor.stream_paused = true
+		EditNote.frozen = true
 		$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * offset)
 		$UI/FileBtn.text = songPath.get_file()
 		$UI/TextureProgressBar.max_value = conductor.song_length
@@ -118,6 +120,8 @@ func _unhandled_key_input(event):
 		if(selectedNote != null):
 			selectNote(selectedNote, false)
 			selectedNote = null
+		if(songPath == null):
+			$UI/Panel.visible = !$UI/Panel.visible
 		elif(!conductor.stream_paused || ended):
 			conductor.stream_paused = true
 			EditNote.pause = true
@@ -176,10 +180,12 @@ func AddNote(markerPos):
 	spawnEditorNotes()
 	Instance.position.x = offset * beat + 30
 
-func RemoveNote(markerPos):
+func RemoveNote(markerPos, relative):
 	if(conductor.playing):
 		return
-	var beat = pos + markerPos
+	var beat = markerPos
+	if(relative):
+		beat = pos + markerPos
 	if(not allNotes.has(beat)):
 		return
 	if(selectedNote == beat):
@@ -193,8 +199,8 @@ func RemoveNote(markerPos):
 func selectNote(beat, on):
 	if(selectedNote != null):
 		allNotes[selectedNote].selectNote(false)
-		if(editorNotes.has(beat)):
-			editorNotes[beat].selectNote(false)
+		if(editorNotes.has(selectedNote)):
+			editorNotes[selectedNote].selectNote(false)
 	selectedNote = beat
 	allNotes[beat].selectNote(on)
 	if(editorNotes.has(beat)):
@@ -339,3 +345,11 @@ func _on_conductor_finished():
 	ended = true
 	conductor.play()
 	conductor.stream_paused = true
+
+func noteHit(hit):
+	if(!conductor.playing):
+		return
+	if(hit):
+		$SFX.PlayHitSound(true)
+	else:
+		$SFX.PlayHitSound(hit)

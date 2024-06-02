@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://c6qut1teuwudk"]
+[gd_scene load_steps=21 format=3 uid="uid://c6qut1teuwudk"]
 
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_oqj31"]
 [ext_resource type="Texture2D" uid="uid://b3snpv6xmdfma" path="res://Assets/sliderBtn.png" id="2_8wuif"]
@@ -6,14 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://c6n5p8l5rren5" path="res://Prefabs/audio_visualizer.tscn" id="2_i2jmd"]
 [ext_resource type="Texture2D" uid="uid://wgya4icmuy3d" path="res://Assets/sliderBtnn.png" id="3_dpxxq"]
 [ext_resource type="Texture2D" uid="uid://5gpbmcbv3n0t" path="res://Assets/circle.png" id="3_m1d8i"]
-[ext_resource type="Texture2D" uid="uid://dgfixpr1d5e6o" path="res://Assets/ButtonMainMenu.png" id="4_e4w24"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="4_jsqoh"]
-[ext_resource type="Texture2D" uid="uid://b68w2fwadn324" path="res://Assets/ButtonMainMenuHover.png" id="5_ernjd"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="5_sunvn"]
 [ext_resource type="Script" path="res://Scripts/SFX.gd" id="9_nrjcv"]
 [ext_resource type="Texture2D" uid="uid://b53cmh6todkk" path="res://Assets/star.png" id="11_00ocf"]
 [ext_resource type="Texture2D" uid="uid://c8eaxm6vrv7df" path="res://Assets/stars-2643089_1920.jpg" id="11_6wrgr"]
-[ext_resource type="PackedScene" uid="uid://l1deg16sx81j" path="res://Prefabs/BlackHole.tscn" id="14_2vgnf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74css"]
 bg_color = Color(0.1741, 0.358487, 1, 1)
@@ -39,17 +36,11 @@ shadow_size = 10
 shadow_offset = Vector2(0, 2.5)
 
 [sub_resource type="Theme" id="Theme_mg802"]
-Button/colors/font_color = Color(0, 0.586416, 0.881886, 1)
+Button/colors/font_color = Color(0.0892309, 0.000120724, 0.232441, 1)
 Button/colors/font_hover_color = Color(0.814449, 0.842116, 0.999998, 1)
 Button/font_sizes/font_size = 60
 Button/styles/hover = SubResource("StyleBoxFlat_74css")
 Button/styles/normal = SubResource("StyleBoxFlat_38s8s")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_er1bg"]
-texture = ExtResource("4_e4w24")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0uidp"]
-texture = ExtResource("5_ernjd")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pufor"]
 bg_color = Color(7.70092e-07, 0.641469, 0.93153, 1)
@@ -83,12 +74,6 @@ bg_color = Color(6.01634e-09, 0.163143, 0.0586826, 1)
 bg_color = Color(7.21961e-07, 0.321488, 0.196136, 1)
 corner_radius_top_left = 1024
 corner_radius_bottom_left = 1024
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_om3nx"]
-texture = ExtResource("4_e4w24")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cdsw3"]
-texture = ExtResource("4_e4w24")
 
 [sub_resource type="Curve" id="Curve_m50uh"]
 _data = [Vector2(0, 1), 0.0, -2.38127, 0, 0, Vector2(0.685393, 0.483516), 1.17363, 1.17363, 0, 0, Vector2(1, 0), -0.34392, 0.0, 0, 0]
@@ -126,58 +111,53 @@ fill_mode = 4
 texture_under = ExtResource("3_m1d8i")
 texture_progress = ExtResource("4_jsqoh")
 
-[node name="Buttons" type="Node" parent="."]
-
-[node name="PlayBtn" type="Button" parent="Buttons"]
+[node name="PlayBtn" type="Button" parent="."]
 top_level = true
-offset_left = 660.0
+layout_mode = 0
+offset_left = 710.0
 offset_top = 100.0
-offset_right = 1260.0
-offset_bottom = 250.0
+offset_right = 1210.0
+offset_bottom = 200.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_er1bg")
-theme_override_styles/hover = SubResource("StyleBoxTexture_0uidp")
 text = "Play"
 
-[node name="EditBtn" type="Button" parent="Buttons"]
+[node name="EditBtn" type="Button" parent="."]
 top_level = true
-offset_left = 660.0
-offset_top = 300.0
-offset_right = 1260.0
-offset_bottom = 450.0
+layout_mode = 0
+offset_left = 710.0
+offset_top = 270.0
+offset_right = 1210.0
+offset_bottom = 370.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_er1bg")
-theme_override_styles/hover = SubResource("StyleBoxTexture_0uidp")
-text = "Edit"
+text = "Edit
+"
 
-[node name="SettingsBtn" type="Button" parent="Buttons"]
+[node name="SettingsBtn" type="Button" parent="."]
 top_level = true
-offset_left = 660.0
-offset_top = 500.0
-offset_right = 1260.0
-offset_bottom = 650.0
+layout_mode = 0
+offset_left = 710.0
+offset_top = 440.0
+offset_right = 1210.0
+offset_bottom = 540.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_er1bg")
-theme_override_styles/hover = SubResource("StyleBoxTexture_0uidp")
 text = "Settings"
 
-[node name="QuitBtn" type="Button" parent="Buttons"]
+[node name="QuitBtn" type="Button" parent="."]
 top_level = true
-offset_left = 660.0
-offset_top = 700.0
-offset_right = 1260.0
-offset_bottom = 850.0
+layout_mode = 0
+offset_left = 710.0
+offset_top = 610.0
+offset_right = 1210.0
+offset_bottom = 710.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_er1bg")
-theme_override_styles/hover = SubResource("StyleBoxTexture_0uidp")
 text = "Quit"
 
 [node name="SettingsMenu" type="Control" parent="."]
@@ -267,7 +247,6 @@ offset_bottom = 710.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_om3nx")
 text = "Menu"
 
 [node name="FolderBtn" type="Button" parent="SettingsMenu"]
@@ -280,7 +259,6 @@ offset_bottom = 200.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
-theme_override_styles/normal = SubResource("StyleBoxTexture_cdsw3")
 text = "Songs in folder"
 
 [node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
@@ -318,18 +296,14 @@ scale_amount_max = 0.7
 scale_amount_curve = SubResource("Curve_m50uh")
 color_initial_ramp = SubResource("Gradient_ji7bp")
 
-[node name="BlackHole" parent="." instance=ExtResource("14_2vgnf")]
-visible = false
-position = Vector2(965, 181)
-
-[connection signal="button_down" from="Buttons/PlayBtn" to="." method="_on_play_btn_button_down"]
-[connection signal="mouse_entered" from="Buttons/PlayBtn" to="SFX" method="hover"]
-[connection signal="button_down" from="Buttons/EditBtn" to="." method="_on_edit_btn_button_down"]
-[connection signal="mouse_entered" from="Buttons/EditBtn" to="SFX" method="hover"]
-[connection signal="button_down" from="Buttons/SettingsBtn" to="." method="_on_settings_btn_button_down"]
-[connection signal="mouse_entered" from="Buttons/SettingsBtn" to="SFX" method="hover"]
-[connection signal="button_down" from="Buttons/QuitBtn" to="." method="_on_quit_btn_button_down"]
-[connection signal="mouse_entered" from="Buttons/QuitBtn" to="SFX" method="hover"]
+[connection signal="button_down" from="PlayBtn" to="." method="_on_play_btn_button_down"]
+[connection signal="mouse_entered" from="PlayBtn" to="SFX" method="hover"]
+[connection signal="button_down" from="EditBtn" to="." method="_on_edit_btn_button_down"]
+[connection signal="mouse_entered" from="EditBtn" to="SFX" method="hover"]
+[connection signal="button_down" from="SettingsBtn" to="." method="_on_settings_btn_button_down"]
+[connection signal="mouse_entered" from="SettingsBtn" to="SFX" method="hover"]
+[connection signal="button_down" from="QuitBtn" to="." method="_on_quit_btn_button_down"]
+[connection signal="mouse_entered" from="QuitBtn" to="SFX" method="hover"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MasterSlider" to="SettingsMenu" method="_on_master_slider_value_changed"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MusicSlider" to="SettingsMenu" method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/SFXSlider" to="SettingsMenu" method="_on_sfx_slider_value_changed"]

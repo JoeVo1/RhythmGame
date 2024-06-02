@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://xlgdfegog77e"]
+[gd_scene load_steps=11 format=3 uid="uid://xlgdfegog77e"]
 
 [ext_resource type="Script" path="res://Scripts/SongSelection.gd" id="1_7ad2l"]
 [ext_resource type="Texture2D" uid="uid://btwava1ekqde3" path="res://Assets/arrow.png" id="2_36y4i"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="4_0cbcg"]
 [ext_resource type="Texture2D" uid="uid://c8eaxm6vrv7df" path="res://Assets/stars-2643089_1920.jpg" id="4_apc45"]
+[ext_resource type="Texture2D" uid="uid://b53cmh6todkk" path="res://Assets/star.png" id="5_coom4"]
+[ext_resource type="Script" path="res://Scripts/SFX.gd" id="6_8l2h4"]
 
 [sub_resource type="Animation" id="Animation_fhh5o"]
 resource_name = "MusicFadeIn"
@@ -25,6 +27,14 @@ _data = {
 "MusicFadeIn": SubResource("Animation_fhh5o")
 }
 
+[sub_resource type="Curve" id="Curve_e7dxi"]
+_data = [Vector2(0, 1), 0.0, -2.38127, 0, 0, Vector2(0.685393, 0.483516), 1.17363, 1.17363, 0, 0, Vector2(1, 0), -0.34392, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_8t3ua"]
+offsets = PackedFloat32Array(0.00666667, 1)
+colors = PackedColorArray(1, 1, 0.701961, 0.784314, 1, 1, 1, 0.784314)
+
 [node name="SongSelection" type="Node2D"]
 script = ExtResource("1_7ad2l")
 
@@ -32,6 +42,7 @@ script = ExtResource("1_7ad2l")
 clip_contents = false
 offset_right = 1920.0
 offset_bottom = 1080.0
+mouse_filter = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
@@ -71,3 +82,22 @@ self_modulate = Color(0.140447, 0.140447, 0.140447, 1)
 z_index = -5
 position = Vector2(960, 640)
 texture = ExtResource("4_apc45")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(960, 540)
+amount = 35
+lifetime = 5.0
+texture = ExtResource("5_coom4")
+emission_shape = 3
+emission_rect_extents = Vector2(960, 540)
+direction = Vector2(0, 0)
+gravity = Vector2(0, 0)
+orbit_velocity_min = -0.01
+orbit_velocity_max = 0.01
+scale_amount_min = 0.1
+scale_amount_max = 0.7
+scale_amount_curve = SubResource("Curve_e7dxi")
+color_initial_ramp = SubResource("Gradient_8t3ua")
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+script = ExtResource("6_8l2h4")

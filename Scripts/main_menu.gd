@@ -6,8 +6,13 @@ var SettingsMenuPos = Vector2(1920, 0)
 var settings: bool = false
 var changingScene = false
 var len = 0
+var lastHoveredPos = null
+var blackHoleOffset
 
 func _ready():
+	blackHoleOffset = $Buttons/PlayBtn.size/2
+	for button in $Buttons.get_children():
+		button.mouse_entered.connect(hover.bind(button))
 	$CPUParticles2D.emitting = true
 	var data = SaveSettings.readData()
 	AudioServer.set_bus_volume_db(0, data.master)
@@ -23,13 +28,17 @@ func _ready():
 	PlayMusic()
 	$Transition.play("fade_in")
 
+func _physics_process(delta):
+	if(lastHoveredPos == null):
+		return
+	$BlackHole.rotate(0.02)
+	$BlackHole.position = lerp($BlackHole.position, lastHoveredPos, 0.3)
 
 func PlayMusic():
 	if(files.is_empty() || files.size() < len):
 		return
 	len += 1
 	$AudioVisualizer.playSong(files[rng.randi_range(0,files.size() - 1)])
-
 
 func _on_play_btn_button_down():
 	if(changingScene):
@@ -43,7 +52,6 @@ func _on_play_btn_button_down():
 	get_parent().add_child(instance)
 	queue_free()
 
-
 func _on_edit_btn_button_down():
 	if(changingScene):
 		return
@@ -56,18 +64,15 @@ func _on_edit_btn_button_down():
 	get_parent().add_child(instance)
 	queue_free()
 
-
 func _on_settings_btn_button_down():
 	$Camera2D.position = SettingsMenuPos
 	settings = true
 
-
 func _on_quit_btn_button_down():
 	$Transition.play("fade_out")
-	await $Transition.animation_finished
 	saveSettings()
+	await $Transition.animation_finished
 	get_tree().quit()
-
 
 func _unhandled_input(event):
 	if(event.is_action_pressed("ui_cancel")):
@@ -75,6 +80,16 @@ func _unhandled_input(event):
 			$Camera2D.position = Vector2(0,0)
 			settings = false
 			return
+	if(event.is_action_pressed("ui_right")):
+		if(!settings):
+			$Camera2D.position = SettingsMenuPos
+			settings = true
+		return
+	if(event.is_action_pressed("ui_left")):
+		if(settings):
+			$Camera2D.position = Vector2(0,0)
+			settings = false
+		return
 	if(event is InputEventMouseButton):
 		if(event.button_index == MOUSE_BUTTON_WHEEL_UP):
 			AudioServer.set_bus_volume_db(0, AudioServer.get_bus_volume_db(0) + 1.04)
@@ -87,7 +102,6 @@ func _unhandled_input(event):
 			$Camera2D/VolumeBar.value = AudioServer.get_bus_volume_db(0)
 			$SettingsMenu/PanelContainer/VBoxContainer/MasterSlider.value = AudioServer.get_bus_volume_db(0)
 			showVolumeBar()
-
 
 func showVolumeBar() -> void:
 	$Camera2D/VolumeBar.visible = true
@@ -107,3 +121,7 @@ func _on_back_btn_button_down():
 		$Camera2D.position = Vector2(0,0)
 		settings = false
 		return
+
+func hover(button):
+	$BlackHole.visible = true
+	lastHoveredPos = button.position + blackHoleOffset

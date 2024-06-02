@@ -19,57 +19,6 @@ var dir
 var noteGUIs: Array
 var changingScene = false
 
-
-func _physics_process(delta):
-	$ScrollContainer.scroll_vertical = lerp(float($ScrollContainer.scroll_vertical), float(pos2), switchSpeed * delta)
-	if(noteGUIs.is_empty()):
-		return
-	noteGUIs[curPos].scale = lerp(Vector2(noteGUIs[curPos].scale), Vector2(1.05,1.05), 0.1)
-
-func _input(event):
-	if(event.is_action_pressed("ui_down")):
-		if(curPos >= MaxPos):
-			return
-		noteGUIs[curPos].scale = Vector2(1,1)
-		curPos += 1
-		playSong(dir[curPos])
-		pos2 = curPos * guiOffset
-		SetColor(8)
-	
-	if(event.is_action_pressed("ui_up")):
-		if(curPos <= 0):
-			return
-		noteGUIs[curPos].scale = Vector2(1,1)
-		curPos -= 1
-		playSong(dir[curPos])
-		pos2 = curPos * guiOffset
-		SetColor(0)
-	
-	if(event.is_action_pressed("ui_accept")):
-		if(changingScene):
-			return
-		changingScene = true
-		$Transition.play("fade_out")
-		await $Transition.animation_finished
-		loadSong(0)
-	
-	if(event.is_action_pressed("ui_cancel")):
-		if(changingScene):
-			return
-		changingScene = true
-		$Transition.play("fade_out")
-		await $Transition.animation_finished
-		var GameInstance = mainMenu.instantiate()
-		get_parent().add_child(GameInstance)
-		queue_free()
-	
-	if(not event is InputEventMouse || event is InputEventMouseMotion || event.is_released()):
-		return
-	if(event.button_index == 1):
-		print(event.position.x)
-		if(480 < event.position.x && 1440 > event.position.x):
-			loadSong(int(event.position.y + 80)/ guiOffset - 1)
-
 func changeGameScene(sceneIndex):
 	$Transition.play("fade_in")
 	var editor = false
@@ -105,15 +54,66 @@ func changeGameScene(sceneIndex):
 	AudioServer.set_bus_volume_db(1, data.music)
 	playSong(dir[0])
 
+func _physics_process(delta):
+	$ScrollContainer.scroll_vertical = lerp(float($ScrollContainer.scroll_vertical), float(pos2), switchSpeed * delta)
+	if(noteGUIs.is_empty()):
+		return
+	noteGUIs[curPos].scale = lerp(Vector2(noteGUIs[curPos].scale), Vector2(1.05,1.05), 0.1)
+
+func _input(event):
+	if(event.is_action_pressed("ui_down")):
+		if(curPos >= MaxPos):
+			return
+		noteGUIs[curPos].scale = Vector2(1,1)
+		curPos += 1
+		playSong(dir[curPos])
+		pos2 = curPos * guiOffset
+		SetColor(8)
+		$SFX.SongSelectSound()
+	
+	if(event.is_action_pressed("ui_up")):
+		if(curPos <= 0):
+			return
+		noteGUIs[curPos].scale = Vector2(1,1)
+		curPos -= 1
+		playSong(dir[curPos])
+		pos2 = curPos * guiOffset
+		SetColor(0)
+		$SFX.SongSelectSound()
+	
+	if(event.is_action_pressed("ui_accept")):
+		if(changingScene):
+			return
+		changingScene = true
+		$Transition.play("fade_out")
+		await $Transition.animation_finished
+		loadSong(0)
+	
+	if(event.is_action_pressed("ui_cancel")):
+		if(changingScene):
+			return
+		changingScene = true
+		$Transition.play("fade_out")
+		await $Transition.animation_finished
+		var GameInstance = mainMenu.instantiate()
+		get_parent().add_child(GameInstance)
+		queue_free()
+	
+	if(not event is InputEventMouse || event is InputEventMouseMotion || event.is_released()):
+		return
+	if(event.button_index == 1):
+		if(480 < event.position.x && 1440 > event.position.x):
+			loadSong(int(event.position.y + 80)/ guiOffset - 1)
+
 func loadSong(value):
 	if(curPos + value > MaxPos):
 		return
 	songToPlay = dir[curPos + value]
 	var GameInstance = sceneToUse.instantiate()
+	GameInstance.levelName = songToPlay
 	GameInstance.path = path + songToPlay
 	get_tree().root.add_child(GameInstance)
 	queue_free()
-
 
 func SetColor(i):
 	if(i + curPos > dir.size() - 1 || dir[curPos + i] == "New Map"):
