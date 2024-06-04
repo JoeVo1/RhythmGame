@@ -6,7 +6,7 @@ var path
 var songPath
 var dataPath
 var Note = preload("res://Prefabs/note.tscn")
-var accuracy = Collider
+var stats = Collider
 var NoteInstance
 var bpm
 var songData
@@ -16,11 +16,13 @@ var delay
 var color: Color
 var approachRate = 2
 var changingScene = false
+var levelName
 
 func _ready():
 	note_.pause = false
 	$Doors.set_process(false)
 	$Transition.play("fade_in")
+	$Doors/Panel/LevelName.text = levelName
 	var data = SaveSettings.readData()
 	AudioServer.set_bus_volume_db(0, data.master)
 	AudioServer.set_bus_volume_db(1, data.music)
@@ -77,13 +79,13 @@ func _physics_process(delta):
 	$TextureProgressBar.value = conductor.song_position
 
 func updateScore():
-	$ComboLabel.text = 'x' + str(accuracy.combo)
-	var acc = accuracy.TotalScore / accuracy.notesHit
+	$ComboLabel.text = 'x' + str(stats.combo)
+	$ComboAni.play("ComboUpdate")
+	var acc = stats.TotalScore / stats.notesHit
 	$AccuracyLabel.text = str(acc) + '%'
 	$AccuracyLabel/TextureProgressBar2.value = acc
 
 func spawnNote(lane, _char):
-	print(currentBeat)
 	NoteInstance = Note.instantiate()
 	$Notes.add_child(NoteInstance)
 	NoteInstance.initialize(lane, _char, approachRate)

@@ -13,16 +13,19 @@ func _ready():
 	blackHoleOffset = $Buttons/PlayBtn.size/2
 	for button in $Buttons.get_children():
 		button.mouse_entered.connect(hover.bind(button))
-	$CPUParticles2D.emitting = true
 	var data = SaveSettings.readData()
-	AudioServer.set_bus_volume_db(0, data.master)
+	if !(data.has("master") || data.has("music") || data.has("particles") || data.has("sfx")):
+		writeDefaultData()
+		data = SaveSettings.readData()
 	$SettingsMenu/PanelContainer/VBoxContainer/MasterSlider.value = data.master
-	
+	AudioServer.set_bus_volume_db(0, data.master)
 	$SettingsMenu/PanelContainer/VBoxContainer/MusicSlider.value = data.music
 	AudioServer.set_bus_volume_db(3, data.music)
-	
 	$SettingsMenu/PanelContainer/VBoxContainer/SFXSlider.value = data.sfx
 	AudioServer.set_bus_volume_db(2, data.sfx)
+	$SettingsMenu/PanelContainer2/VBoxContainer/CheckBox.button_pressed = !data.particles
+	$CPUParticles2D.emitting = data.particles
+	SaveSettings.enableParticles = data.particles
 	
 	$Camera2D/VolumeBar.value = AudioServer.get_bus_volume_db(0)
 	PlayMusic()
@@ -125,3 +128,18 @@ func _on_back_btn_button_down():
 func hover(button):
 	$BlackHole.visible = true
 	lastHoveredPos = button.position + blackHoleOffset
+
+func PlaySFX():
+	$SFX.PlayHitSound(true)
+
+func enableParticles():
+	$CPUParticles2D.emitting = SaveSettings.enableParticles
+
+static func writeDefaultData():
+	var dic: Dictionary
+	dic["master"] = 0
+	dic["music"] = 0
+	dic["sfx"] = 0
+	dic["particles"] = true
+	var file = FileAccess.open("user://Settings.json", FileAccess.WRITE)
+	file.store_string(JSON.stringify(dic))

@@ -5,6 +5,7 @@ const saveGamePath = "user://Settings.json"
 static var masterVol:= 0
 static var musicVol:= 0
 static var SFXVol:= 0
+static var enableParticles := true
 
 
 static func writeData():
@@ -12,6 +13,7 @@ static func writeData():
 	dic["master"] = masterVol
 	dic["music"] = musicVol
 	dic["sfx"] = SFXVol
+	dic["particles"] = enableParticles
 	var file = FileAccess.open(saveGamePath, FileAccess.WRITE)
 	file.store_string(JSON.stringify(dic))
 

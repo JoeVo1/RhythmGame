@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://xlgdfegog77e"]
+[gd_scene load_steps=12 format=3 uid="uid://xlgdfegog77e"]
 
 [ext_resource type="Script" path="res://Scripts/SongSelection.gd" id="1_7ad2l"]
 [ext_resource type="Texture2D" uid="uid://btwava1ekqde3" path="res://Assets/arrow.png" id="2_36y4i"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8eaxm6vrv7df" path="res://Assets/stars-2643089_1920.jpg" id="4_apc45"]
 [ext_resource type="Texture2D" uid="uid://b53cmh6todkk" path="res://Assets/star.png" id="5_coom4"]
 [ext_resource type="Script" path="res://Scripts/SFX.gd" id="6_8l2h4"]
+[ext_resource type="Script" path="res://Scripts/BackHoleBounce.gd" id="7_cbh8p"]
 
 [sub_resource type="Animation" id="Animation_fhh5o"]
 resource_name = "MusicFadeIn"
@@ -55,6 +56,7 @@ custom_minimum_size = Vector2(1920, 1)
 layout_mode = 2
 
 [node name="Arrows" type="Node2D" parent="ScrollContainer"]
+top_level = true
 position = Vector2(960, 140)
 
 [node name="Sprite2D" type="Sprite2D" parent="ScrollContainer/Arrows"]
@@ -84,6 +86,7 @@ position = Vector2(960, 640)
 texture = ExtResource("4_apc45")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+visible = false
 position = Vector2(960, 540)
 amount = 35
 lifetime = 5.0
@@ -101,3 +104,15 @@ color_initial_ramp = SubResource("Gradient_8t3ua")
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
 script = ExtResource("6_8l2h4")
+
+[node name="Label" type="Label" parent="."]
+self_modulate = Color(0.490196, 0.419608, 0.541176, 0.490196)
+offset_left = 15.0
+offset_right = 195.0
+offset_bottom = 124.0
+theme_override_colors/font_outline_color = Color(0.254902, 0.00784314, 0.317647, 0.862745)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 90
+
+[node name="BlackHoleCreater" type="Node" parent="."]
+script = ExtResource("7_cbh8p")

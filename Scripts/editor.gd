@@ -7,10 +7,10 @@ var path
 var songPath
 var dataPath
 var Note = preload("res://Prefabs/edit_note.tscn")
-var accuracy = preload("res://Scripts/noteCollider.gd")
+var stats = preload("res://Scripts/noteCollider.gd")
 var Marker = preload("res://Prefabs/marker.tscn")
 var NoteGUI = preload("res://Prefabs/note_gui.tscn")
-var offset = 80
+var markerOffset = 80
 var beatOffset = 3
 var NoteInstance
 var bpm
@@ -29,12 +29,14 @@ var SelectorColor = null
 var saveFolder = null
 var ended = false
 var levelName = ""
+var saved = true
 
 func _ready():
 	if(path == "user://Songs/New Map"):
 		bpm = 100
 		delay = 0
 	else:
+		$UI/LevelName.editable = false
 		$UI/LevelName.text = levelName
 		for file in DirAccess.get_files_at(path):
 			if(file.ends_with(".ogg")):
@@ -49,9 +51,9 @@ func _ready():
 		maxBeats = conductor.song_length_in_beats
 		conductor.stream_paused = true
 		EditNote.frozen = true
-		$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * offset)
+		$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * markerOffset)
 		$UI/FileBtn.text = songPath.get_file()
-		$UI/TextureProgressBar.max_value = conductor.song_length
+		$UI/TextureProgressBar.max_value = maxBeats
 		for note in songData:
 			var Instance = NoteGUI.instantiate()
 			Instance.beat = note.beat
@@ -59,15 +61,14 @@ func _ready():
 			Instance.changeLabel(note.label)
 			allNotes[int(note.beat)] = Instance
 			$UI/ScrollContainer/HBoxContainer/Node2D.add_child(Instance)
-			Instance.position.x = offset * note.beat + 30
+			Instance.position.x = markerOffset * note.beat + 30
 	$UI/BPM.value = bpm
 	$UI/Delay.value = delay
-	
 	for value in 60:
 		var Instance = Marker.instantiate()
 		Instance.pos = value
 		$UI/Markers.add_child(Instance)
-		Instance.position.x = offset * value + 30
+		Instance.position.x = markerOffset * value + 30
 		Instance.position.y -= 108
 	$UI/Markers.get_children()[beatOffset].texture = load("res://Assets/Marker01.png")
 	AudioServer.set_bus_volume_db(0, SaveSettings.masterVol)
@@ -77,10 +78,11 @@ func _ready():
 	$Transition.play("fade_in")
 
 func _physics_process(_delta):
-	$UI/TextureProgressBar.value = conductor.song_position
 	$UI/FPSCounter.text = "FPS:\n" + str(Engine.get_frames_per_second())
+	$UI/TextureProgressBar.value = pos
 	if(conductor.playing):
-		$UI/ScrollContainer.scroll_horizontal = conductor.song_position / conductor.sec_per_beat * offset - offset * 4 - 4 * offset + 30
+		$UI/TextureProgressBar.value = currentBeat
+		$UI/ScrollContainer.scroll_horizontal = conductor.song_position / conductor.sec_per_beat * markerOffset - markerOffset * 4 - 4 * markerOffset + 30
 
 func _unhandled_input(event):
 	if($Transition.is_playing()):
@@ -103,7 +105,7 @@ func _unhandled_key_input(event):
 			ended = false
 			return
 		currentBeat = pos + beatOffset
-		playFrom = pos * offset
+		playFrom = pos * markerOffset
 		EditNote.frozen = false
 		EditNote.pause = false
 		conductor.play_from_beat(pos)
@@ -155,15 +157,15 @@ func _unhandled_key_input(event):
 		Zoom(-10)
 
 func Zoom(value):
-	offset += value
+	markerOffset += value
 	var j = 0
 	for i in $UI/Markers.get_children():
-		i.position.x = offset * j + 30
+		i.position.x = markerOffset * j + 30
 		j += 1
 	for i in $UI/ScrollContainer/HBoxContainer/Node2D.get_children():
-		i.position.x = offset * i.beat + 30
-	$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * offset)
-	$UI/ScrollContainer.scroll_horizontal = pos * offset
+		i.position.x = markerOffset * i.beat + 30
+	$UI/ScrollContainer/HBoxContainer/ColorRect.custom_minimum_size.x = (maxBeats * markerOffset)
+	$UI/ScrollContainer.scroll_horizontal = pos * markerOffset
 
 func AddNote(markerPos):
 	if(conductor.playing):
@@ -178,7 +180,8 @@ func AddNote(markerPos):
 	allNotes[int(beat)] = Instance
 	editorNotes[int(beat)] = Instance
 	spawnEditorNotes()
-	Instance.position.x = offset * beat + 30
+	Instance.position.x = markerOffset * beat + 30
+	saved = false
 
 func RemoveNote(markerPos, relative):
 	if(conductor.playing):
@@ -195,6 +198,7 @@ func RemoveNote(markerPos, relative):
 	if(editorNotes.has(beat)):
 		editorNotes[beat].queue_free()
 		editorNotes.erase(beat)
+	saved = false
 
 func selectNote(beat, on):
 	if(selectedNote != null):
@@ -223,8 +227,8 @@ func _on_conductor_beat(position):
 		currentBeat +=1
 
 func updateScore():
-	$UI/ComboLabel.text = str(accuracy.combo)
-	$UI/AccuracyLabel.text = str(accuracy.TotalScore / accuracy.notesHit)
+	$UI/ComboLabel.text = str(stats.combo)
+	$UI/AccuracyLabel.text = str(stats.TotalScore / stats.notesHit)
 
 func spawnNote(lane, _char):
 	NoteInstance = Note.instantiate()
@@ -255,7 +259,6 @@ func writeFile():
 	var notes : Array
 	data["bpm"] = bpm
 	data["delay"] = delay
-	var i = 0
 	for note in allNotes.values():
 		var dic : Dictionary
 		dic["beat"] = note.beat
@@ -270,27 +273,32 @@ func writeFile():
 	else:
 		data["color"] = var_to_str(Color(1,1,1,1))
 	if(path == "user://Songs/New Map"):
-		while(true):
-			if(DirAccess.dir_exists_absolute(path + str(i))):
-				i+=1
-			else:
-				break
-		var dir = DirAccess.make_dir_absolute(path + str(i))
-		var file = FileAccess.open(path + str(i) + "/data.json", FileAccess.WRITE)
+		if($UI/LevelName.text == "" || $UI/LevelName.text == null):
+			SendError("error - add level name")
+			return
+		if(songPath == null):
+			SendError("error - add song")
+			return
+		path = "user://Songs/" + $UI/LevelName.text
+		var dir = DirAccess.make_dir_absolute(path)
+		var file = FileAccess.open(path + "/data.json", FileAccess.WRITE)
 		file.store_string(JSON.stringify(data))
-		var newSongFile = FileAccess.open(path + str(i) + "/song.ogg", FileAccess.WRITE)
+		var newSongFile = FileAccess.open(path + "/song.ogg", FileAccess.WRITE)
 		var songfile = FileAccess.open(songPath, FileAccess.READ)
 		var buffer = songfile.get_buffer(songfile.get_length())
 		newSongFile.store_buffer(buffer)
+		dataPath = path + "/data.json"
+		$UI/LevelName.editable = false
 	else:
 		var file = FileAccess.open(dataPath, FileAccess.WRITE)
 		file.store_string(JSON.stringify(data))
+	saved = true
+	return true
 
 func moveBar(value: int):
-	if(pos == conductor.song_length_in_beats || value < 0 && pos == 0):
-		return
-	$UI/ScrollContainer.scroll_horizontal += offset * value
 	pos += value
+	pos = clampi(pos, 0, maxBeats)
+	$UI/ScrollContainer.scroll_horizontal = markerOffset * pos
 	spawnEditorNotes()
 
 func spawnEditorNotes():
@@ -327,12 +335,12 @@ func customSort(a,b):
 	return a.beat < b.beat
 
 func dropped(drag):
-	print("drioped")
 	if(selectedNote == null):
 		return
 	var on
 	drag.on = true
 	allNotes[selectedNote].lane = drag.i
+	saved = false
 
 func showVolumeBar() -> void:
 	$UI/VolumeBar.visible = true
@@ -353,3 +361,7 @@ func noteHit(hit):
 		$SFX.PlayHitSound(true)
 	else:
 		$SFX.PlayHitSound(hit)
+
+func SendError(message):
+	$UI/Error.visible = true
+	$UI/Error.text = message

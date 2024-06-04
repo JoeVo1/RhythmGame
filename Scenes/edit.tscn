@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://o3bgo06nobmf"]
+[gd_scene load_steps=20 format=3 uid="uid://o3bgo06nobmf"]
 
 [ext_resource type="Script" path="res://Scripts/editor.gd" id="1_0upao"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_jj87p"]
@@ -23,6 +23,18 @@ size = Vector2(1920, 210)
 
 [sub_resource type="Theme" id="Theme_et0fp"]
 default_font_size = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ouv42"]
+bg_color = Color(0.858824, 0.113725, 0, 0.705882)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 0.784314)
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
 
 [node name="Edit" type="Node2D"]
 script = ExtResource("1_0upao")
@@ -203,6 +215,7 @@ min_value = 1.0
 max_value = 10.0
 step = 0.1
 value = 1.0
+editable = false
 prefix = "AR:"
 
 [node name="FileBtn" type="Button" parent="UI"]
@@ -246,6 +259,7 @@ offset_right = 2320.0
 offset_bottom = 590.0
 theme = SubResource("Theme_et0fp")
 max_value = 10.0
+editable = false
 prefix = "Difficulty:"
 
 [node name="SaveBtn" type="Button" parent="UI"]
@@ -308,6 +322,55 @@ fill_mode = 4
 texture_under = ExtResource("12_31a4h")
 texture_progress = ExtResource("13_62xbf")
 
+[node name="Error" type="Button" parent="UI"]
+visible = false
+z_index = 3
+offset_left = 77.0
+offset_top = 917.0
+offset_right = 1049.0
+offset_bottom = 1116.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 100
+theme_override_styles/normal = SubResource("StyleBoxFlat_ouv42")
+
+[node name="SaveAndExit" type="Panel" parent="UI"]
+visible = false
+z_index = 3
+offset_left = 700.0
+offset_top = 200.0
+offset_right = 1842.0
+offset_bottom = 900.0
+
+[node name="SaveAndExitBtn" type="Button" parent="UI/SaveAndExit"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 100.0
+offset_right = 850.001
+offset_bottom = 200.001
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Save And Exit"
+
+[node name="ExitBtn" type="Button" parent="UI/SaveAndExit"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 250.0
+offset_right = 850.0
+offset_bottom = 350.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Exit"
+
+[node name="CancelBtn" type="Button" parent="UI/SaveAndExit"]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 400.0
+offset_right = 850.0
+offset_bottom = 500.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 50
+text = "Cancel"
+
 [node name="Notes" type="Node" parent="."]
 
 [node name="Timer" type="Timer" parent="."]
@@ -315,6 +378,7 @@ texture_progress = ExtResource("13_62xbf")
 [node name="Transition" parent="." instance=ExtResource("14_ke8q8")]
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
 script = ExtResource("15_fb06a")
 
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
@@ -330,3 +394,7 @@ script = ExtResource("15_fb06a")
 [connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_file_dialog_file_selected"]
 [connection signal="button_down" from="UI/Panel/BackBtn" to="UI" method="_on_back_btn_button_down"]
 [connection signal="button_down" from="UI/Panel/CancelBtn" to="UI" method="_on_cancel_btn_button_down"]
+[connection signal="button_down" from="UI/Error" to="UI" method="_on_error_button_down"]
+[connection signal="button_down" from="UI/SaveAndExit/SaveAndExitBtn" to="UI" method="_on_save_and_exit_btn_button_down"]
+[connection signal="button_down" from="UI/SaveAndExit/ExitBtn" to="UI" method="_on_exit_btn_button_down"]
+[connection signal="button_down" from="UI/SaveAndExit/CancelBtn" to="UI" method="_on_SAEcancel_btn_button_down"]

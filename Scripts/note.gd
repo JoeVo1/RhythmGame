@@ -11,6 +11,7 @@ var letter
 var hit = false
 
 func initialize(lane, _char, beatsToGoal):
+	$CPUParticles2D.visible = SaveSettings.enableParticles
 	var distance = position.x - 1708
 	speed = abs(distance/beatsToGoal)
 	letter = _char
@@ -32,13 +33,17 @@ func _physics_process(delta):
 		queue_free()
 
 func destroy(score):
+	if(hit):
+		return
 	hit = true
 	$CollisionShape2D.disabled = true
 	position = Vector2(1708, position.y)
 	$Timer.start()
 	$Sprite2D.visible = false
 	label.visible = false
-	$CPUParticles2D.emitting = true
+	if(score > 0):
+		$CPUParticles2D.amount *= score
+		$CPUParticles2D.emitting = true
 	$Score.texture = scoreLabels[score]
 
 func _on_timer_timeout():

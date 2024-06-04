@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bspxym8dngysu"
-path="res://.godot/imported/closingScene.png-1a05b2016545ed7eca9eadfa544f150f.ctex"
+uid="uid://dkjwdctclt71s"
+path="res://.godot/imported/greencircle.png-bd39f17d8c7b122b4b6585780bf4043f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/closingScene.png"
-dest_files=["res://.godot/imported/closingScene.png-1a05b2016545ed7eca9eadfa544f150f.ctex"]
+source_file="res://Assets/greencircle.png"
+dest_files=["res://.godot/imported/greencircle.png-bd39f17d8c7b122b4b6585780bf4043f.ctex"]
 
 [params]
 

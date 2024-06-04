@@ -14,6 +14,7 @@ static var misses = 0
 static var TotalScore = 0
 static var notesHit = 0
 static var combo = 0
+static var maxCombo = 0
 
 func _ready():
 	okayScore = 0
@@ -23,6 +24,7 @@ func _ready():
 	TotalScore = 0
 	notesHit = 0
 	combo = 0
+	maxCombo = 0
 	game = get_parent().get_parent()
 
 func _unhandled_key_input(event):
@@ -53,6 +55,8 @@ func _unhandled_key_input(event):
 				combo = 0
 				game.noteHit(false)
 				currentNote[0].destroy(0)
+		if(combo > maxCombo):
+			maxCombo = combo
 		notesHit += 1
 		get_parent().get_parent().updateScore()
 

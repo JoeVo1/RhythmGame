@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://5ohg8jqi2k34"]
+[gd_scene load_steps=26 format=3 uid="uid://5ohg8jqi2k34"]
 
 [ext_resource type="Script" path="res://Scripts/game.gd" id="1_7fl46"]
 [ext_resource type="Texture2D" uid="uid://daqf7fvmt7xrr" path="res://Assets/BackGround.png" id="2_aieoc"]
@@ -16,11 +16,33 @@
 [ext_resource type="Texture2D" uid="uid://dm1sk2d0ywbpg" path="res://Assets/accprogress.png" id="11_kelcf"]
 [ext_resource type="Texture2D" uid="uid://bvhagsj1wllfi" path="res://Assets/circleinner.png" id="12_se3sn"]
 [ext_resource type="Script" path="res://Scripts/ClosingDoors.gd" id="13_hrdxn"]
-[ext_resource type="Texture2D" uid="uid://2a7e7mwactfc" path="res://Assets/closingScene.png" id="14_lnmbo"]
+[ext_resource type="Texture2D" uid="uid://bspxym8dngysu" path="res://Assets/closingScene.png" id="14_lnmbo"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="15_fe18q"]
 [ext_resource type="Script" path="res://Scripts/SFX.gd" id="16_aafaj"]
 
 [sub_resource type="AudioStream" id="AudioStream_26cnw"]
+
+[sub_resource type="Animation" id="Animation_8xljr"]
+resource_name = "ComboUpdate"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ComboLabel:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.07, 0.1),
+"transitions": PackedFloat32Array(1, 2.82843, 0.999999),
+"update": 0,
+"values": [Vector2(0.6, 0.6), Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_g4iha"]
+_data = {
+"ComboUpdate": SubResource("Animation_8xljr")
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0gvk0"]
 bg_color = Color(0.0509804, 0, 0.27451, 0.784314)
@@ -156,13 +178,20 @@ position = Vector2(0, -56.85)
 anchor_mode = 0
 zoom = Vector2(0.95, 0.95)
 
+[node name="ComboAni" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_g4iha")
+}
+
 [node name="ComboLabel" type="Label" parent="."]
 z_index = 2
-offset_left = 1915.0
-offset_top = 116.0
-offset_right = 2026.0
-offset_bottom = 167.0
-theme_override_font_sizes/font_size = 37
+offset_left = 1940.0
+offset_top = 110.0
+offset_right = 2001.0
+offset_bottom = 186.0
+pivot_offset = Vector2(30, 35)
+theme_override_font_sizes/font_size = 45
+text = "0x"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -197,6 +226,8 @@ offset_bottom = -5.0
 step = 0.0
 texture_under = ExtResource("7_mug53")
 texture_progress = ExtResource("8_uaxxu")
+tint_under = Color(1, 1, 1, 0.784314)
+tint_progress = Color(1, 1, 1, 0.784314)
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
@@ -358,14 +389,39 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 50
 text = "Perfect: "
 
+[node name="MaxCombo" type="ColorRect" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 137.67
+offset_top = 800.0
+offset_right = 554.47
+offset_bottom = 889.41
+
+[node name="Label" type="Label" parent="Doors/Panel/MaxCombo"]
+layout_mode = 0
+offset_left = 12.33
+offset_top = 8.0
+offset_right = 402.33
+offset_bottom = 81.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Combo: "
+
 [node name="BackToSongListBtn" type="Button" parent="Doors/Panel"]
 layout_mode = 0
-offset_left = 1220.0
+offset_left = 1450.0
 offset_top = 50.0
-offset_right = 1536.49
+offset_right = 1765.0
 offset_bottom = 150.001
 theme_override_font_sizes/font_size = 50
 text = "Back"
+
+[node name="LevelName" type="Label" parent="Doors/Panel"]
+layout_mode = 0
+offset_left = 760.0
+offset_right = 1160.0
+offset_bottom = 100.0
+theme_override_font_sizes/font_size = 70
+horizontal_alignment = 1
 
 [node name="Transition" parent="." instance=ExtResource("15_fe18q")]
 

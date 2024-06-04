@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://c6qut1teuwudk"]
+[gd_scene load_steps=32 format=3 uid="uid://c6qut1teuwudk"]
 
 [ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_oqj31"]
 [ext_resource type="Texture2D" uid="uid://b3snpv6xmdfma" path="res://Assets/sliderBtn.png" id="2_8wuif"]
@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://b68w2fwadn324" path="res://Assets/ButtonMainMenuHover.png" id="5_ernjd"]
 [ext_resource type="PackedScene" uid="uid://dmj3dvw2qrrx6" path="res://Prefabs/transition.tscn" id="5_sunvn"]
 [ext_resource type="Script" path="res://Scripts/SFX.gd" id="9_nrjcv"]
+[ext_resource type="Texture2D" uid="uid://dkjwdctclt71s" path="res://Assets/greencircle.png" id="9_nscxd"]
+[ext_resource type="Texture2D" uid="uid://bif4whfcjx85w" path="res://Assets/cross.png" id="10_wteo5"]
 [ext_resource type="Texture2D" uid="uid://b53cmh6todkk" path="res://Assets/star.png" id="11_00ocf"]
 [ext_resource type="Texture2D" uid="uid://c8eaxm6vrv7df" path="res://Assets/stars-2643089_1920.jpg" id="11_6wrgr"]
 [ext_resource type="PackedScene" uid="uid://l1deg16sx81j" path="res://Prefabs/BlackHole.tscn" id="14_2vgnf"]
@@ -52,10 +54,11 @@ texture = ExtResource("4_e4w24")
 texture = ExtResource("5_ernjd")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pufor"]
-bg_color = Color(7.70092e-07, 0.641469, 0.93153, 1)
+bg_color = Color(0.219608, 0, 0.372549, 1)
 border_width_right = 5
 border_width_bottom = 15
-border_color = Color(0.259207, 0.196599, 1, 1)
+border_color = Color(0.027451, 0.0823529, 0.286275, 1)
+border_blend = true
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
@@ -87,8 +90,14 @@ corner_radius_bottom_left = 1024
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_om3nx"]
 texture = ExtResource("4_e4w24")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f3f3q"]
+texture = ExtResource("5_ernjd")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cdsw3"]
 texture = ExtResource("4_e4w24")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1gb3w"]
+texture = ExtResource("5_ernjd")
 
 [sub_resource type="Curve" id="Curve_m50uh"]
 _data = [Vector2(0, 1), 0.0, -2.38127, 0, 0, Vector2(0.685393, 0.483516), 1.17363, 1.17363, 0, 0, Vector2(1, 0), -0.34392, 0.0, 0, 0]
@@ -201,6 +210,7 @@ theme_override_constants/separation = 15
 
 [node name="Label3" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.584314, 0.882353, 1)
 theme_override_font_sizes/font_size = 56
 text = "Master Volume"
 horizontal_alignment = 1
@@ -220,6 +230,7 @@ value = -80.0
 
 [node name="Label" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.584314, 0.882353, 1)
 theme_override_font_sizes/font_size = 56
 text = "Music Volume"
 horizontal_alignment = 1
@@ -240,6 +251,7 @@ scrollable = false
 
 [node name="Label2" type="Label" parent="SettingsMenu/PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.584314, 0.882353, 1)
 theme_override_font_sizes/font_size = 56
 text = "SFX Volume"
 horizontal_alignment = 1
@@ -261,27 +273,58 @@ value = -60.0
 top_level = true
 layout_mode = 0
 offset_left = 2020.0
-offset_top = 610.0
+offset_top = 600.0
 offset_right = 2520.0
-offset_bottom = 710.0
+offset_bottom = 700.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
 theme_override_styles/normal = SubResource("StyleBoxTexture_om3nx")
+theme_override_styles/hover = SubResource("StyleBoxTexture_f3f3q")
 text = "Menu"
 
 [node name="FolderBtn" type="Button" parent="SettingsMenu"]
 top_level = true
 layout_mode = 0
 offset_left = 2600.0
-offset_top = 100.0
+offset_top = 600.0
 offset_right = 3100.0
-offset_bottom = 200.0
+offset_bottom = 700.0
 pivot_offset = Vector2(250, 0)
 focus_mode = 0
 theme = SubResource("Theme_mg802")
 theme_override_styles/normal = SubResource("StyleBoxTexture_cdsw3")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1gb3w")
 text = "Songs in folder"
+
+[node name="PanelContainer2" type="PanelContainer" parent="SettingsMenu"]
+z_index = 1
+layout_mode = 2
+offset_left = 2582.05
+offset_top = 100.0
+offset_right = 3082.05
+offset_bottom = 496.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pufor")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="SettingsMenu/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.584314, 0.882353, 1)
+theme_override_font_sizes/font_size = 56
+text = "Video Settings"
+horizontal_alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="SettingsMenu/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 40
+theme_override_icons/checked = ExtResource("10_wteo5")
+theme_override_icons/unchecked = ExtResource("9_nscxd")
+button_pressed = true
+text = "Enable Particles"
 
 [node name="AudioVisualizer" parent="." instance=ExtResource("2_i2jmd")]
 
@@ -332,8 +375,11 @@ position = Vector2(965, 181)
 [connection signal="mouse_entered" from="Buttons/QuitBtn" to="SFX" method="hover"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MasterSlider" to="SettingsMenu" method="_on_master_slider_value_changed"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/MusicSlider" to="SettingsMenu" method="_on_music_slider_value_changed"]
+[connection signal="drag_ended" from="SettingsMenu/PanelContainer/VBoxContainer/SFXSlider" to="SettingsMenu" method="_on_sfx_slider_drag_ended"]
 [connection signal="value_changed" from="SettingsMenu/PanelContainer/VBoxContainer/SFXSlider" to="SettingsMenu" method="_on_sfx_slider_value_changed"]
 [connection signal="button_down" from="SettingsMenu/BackBtn" to="." method="_on_back_btn_button_down"]
 [connection signal="mouse_entered" from="SettingsMenu/BackBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="SettingsMenu/FolderBtn" to="SettingsMenu" method="_on_folder_btn_button_down"]
 [connection signal="mouse_entered" from="SettingsMenu/FolderBtn" to="SFX" method="hover"]
+[connection signal="button_down" from="SettingsMenu/PanelContainer2/VBoxContainer/CheckBox" to="SettingsMenu" method="_on_check_box_button_down"]
+[connection signal="button_down" from="SettingsMenu/PanelContainer2/VBoxContainer/CheckBox" to="SFX" method="hover"]

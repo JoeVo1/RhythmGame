@@ -10,8 +10,12 @@ func _on_cancel_btn_button_down():
 	$Panel.visible = false
 
 func _on_back_btn_button_down():
-	get_tree().current_scene = editor
-	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+	if(editor.saved):
+		get_tree().current_scene = editor
+		get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+	else:
+		$SaveAndExit.visible = true
+		$Panel.visible = false
 
 func _on_color_picker_color_changed(color):
 	editor.SelectorColor = color
@@ -37,10 +41,10 @@ func _on_file_btn_button_down():
 
 func on_file_dropped(file):
 	if(file.size() != 1):
-		print("only 1")
+		editor.SendError("only 1")
 		return
 	if(!file[0].ends_with(".ogg")):
-		print("incorrect File Type")
+		editor.SendError("incorrect File Type")
 		return
 	editor.songPath = file[0]
 	loadSong()
@@ -61,3 +65,24 @@ func loadSong():
 
 func _on_color_picker_btn_button_down():
 	$ColorPicker.visible = !$ColorPicker.visible
+
+
+func _on_error_button_down():
+	$Error.visible = false
+
+
+func _on_save_and_exit_btn_button_down():
+	if(editor.writeFile() == true):
+		get_tree().current_scene = editor
+		get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+	else:
+		$SaveAndExit.visible = false
+
+
+func _on_exit_btn_button_down():
+	get_tree().current_scene = editor
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+
+
+func _on_SAEcancel_btn_button_down():
+	$SaveAndExit.visible = false

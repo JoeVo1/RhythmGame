@@ -20,12 +20,16 @@ var noteGUIs: Array
 var changingScene = false
 
 func changeGameScene(sceneIndex):
+	$CPUParticles2D.visible = true
+	$CPUParticles2D.emitting = SaveSettings.enableParticles
 	$Transition.play("fade_in")
 	var editor = false
 	match sceneIndex:
 		0:
+			$Label.text = ""
 			sceneToUse = gameScene
 		1:
+			$Label.text = "Edit"
 			sceneToUse = editorScene
 			editor = true
 	
@@ -38,6 +42,8 @@ func changeGameScene(sceneIndex):
 	if(MinPos > MaxPos):
 		MinPos = MaxPos * guiOffset
 	for folder in dir:
+		if(i>8):
+			break
 		var instance = GUI.instantiate()
 		$ScrollContainer/VBoxContainer.add_child(instance)
 		instance.initialize(i ,folder.get_basename())
@@ -136,6 +142,8 @@ func parseFile(_path):
 
 func playSong(fileName):
 	if(fileName == "New Map"):
+		$Bg.self_modulate = Color(1,1,1) / 6
+		$Bg.self_modulate.a = 1
 		$Music/AudioStreamPlayer.stop()
 		return
 	var song = null
