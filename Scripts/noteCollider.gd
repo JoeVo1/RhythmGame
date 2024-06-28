@@ -58,7 +58,7 @@ func _unhandled_key_input(event):
 		if(combo > maxCombo):
 			maxCombo = combo
 		notesHit += 1
-		get_parent().get_parent().updateScore()
+		game.updateScore()
 
 func _on_okay_area_area_entered(area):
 	if(area.is_in_group("note")):

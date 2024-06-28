@@ -50,8 +50,6 @@ func _report_beat():
 		emit_signal("measureSignal", measure)
 		last_reported_beat = song_position_in_beats
 		measure += 1
-		if(song_position_in_beats >= song_length_in_beats - 3):
-			emit_signal("songFinished")
 
 func closest_beat(nth):
 	closest = int(round((song_position / sec_per_beat) / nth) * nth) 

@@ -20,7 +20,6 @@ var levelName
 
 func _ready():
 	note_.pause = false
-	$Doors.set_process(false)
 	$Transition.play("fade_in")
 	$Doors/Panel/LevelName.text = levelName
 	var data = SaveSettings.readData()
@@ -127,13 +126,6 @@ func _on_cancel_btn_button_down():
 	note_.pause = false
 	$Panel.visible = false
 
-func _on_conductor_song_finished():
-	$FinishTimer.wait_time = conductor.sec_per_beat * 4
-	$FinishTimer.start()
-	await $FinishTimer.timeout
-	SaveSettings.writeData()
-	$Doors.set_process(true)
-	$Doors.closeDoors()
 
 func showVolumeBar() -> void:
 	$VolumeBar.visible = true
@@ -160,3 +152,11 @@ func noteHit(hit):
 		$SFX.PlayHitSound(true)
 	else:
 		$SFX.PlayHitSound(hit)
+
+
+func _on_conductor_finished():
+	$FinishTimer.wait_time = conductor.sec_per_beat * 4
+	$FinishTimer.start()
+	await $FinishTimer.timeout
+	SaveSettings.writeData()
+	$Doors.closeDoors()

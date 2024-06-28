@@ -108,6 +108,9 @@ func _unhandled_key_input(event):
 		playFrom = pos * markerOffset
 		EditNote.frozen = false
 		EditNote.pause = false
+		editorNotes.clear()
+		for node in $Notes.get_children():
+			node.queue_free()
 		conductor.play_from_beat(pos)
 	if(event.as_text() == "Equal"):
 		AudioServer.set_bus_volume_db(0, $UI/VolumeBar.value + 1.04)
@@ -122,6 +125,7 @@ func _unhandled_key_input(event):
 		if(selectedNote != null):
 			selectNote(selectedNote, false)
 			selectedNote = null
+			return
 		if(songPath == null):
 			$UI/Panel.visible = !$UI/Panel.visible
 		elif(!conductor.stream_paused || ended):
@@ -195,7 +199,7 @@ func RemoveNote(markerPos, relative):
 		selectedNote = null
 	allNotes[beat].queue_free()
 	allNotes.erase(beat)
-	if(editorNotes.has(beat)):
+	if(editorNotes.has(beat) && is_instance_valid(editorNotes[beat])):
 		editorNotes[beat].queue_free()
 		editorNotes.erase(beat)
 	saved = false

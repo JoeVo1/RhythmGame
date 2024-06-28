@@ -433,7 +433,7 @@ bus = &"SFX"
 script = ExtResource("16_aafaj")
 
 [connection signal="beat" from="Conductor" to="." method="_on_conductor_beat"]
-[connection signal="songFinished" from="Conductor" to="." method="_on_conductor_song_finished"]
+[connection signal="finished" from="Conductor" to="." method="_on_conductor_finished"]
 [connection signal="button_down" from="Panel/BackBtn" to="." method="_on_back_btn_button_down"]
 [connection signal="mouse_entered" from="Panel/BackBtn" to="SFX" method="hover"]
 [connection signal="button_down" from="Panel/CancelBtn" to="." method="_on_cancel_btn_button_down"]

@@ -48,16 +48,20 @@ func on_file_dropped(file):
 		return
 	editor.songPath = file[0]
 	loadSong()
-	$ScrollContainer/HBoxContainer/ColorRect.size.x = (editor.conductor.song_length_in_beats * editor.offset) + 2400
+	$ScrollContainer/HBoxContainer/ColorRect.size.x = (editor.conductor.song_length_in_beats * editor.markerOffset) + 2400
 	editor.maxBeats = editor.conductor.song_length_in_beats
+	$TextureProgressBar.max_value = editor.maxBeats
 	$FileBtn.text = file[0].get_file()
+	editor.conductor.stream_paused = true
 
 func _on_file_dialog_file_selected(_path):
 	editor.songPath = _path
 	$FileBtn.text = _path.get_file()
 	loadSong()
-	$ScrollContainer/HBoxContainer/ColorRect.size.x = (editor.conductor.song_length_in_beats * editor.offset) + 2400
+	$ScrollContainer/HBoxContainer/ColorRect.size.x = (editor.conductor.song_length_in_beats * editor.markerOffset) + 2400
 	editor.maxBeats = editor.conductor.song_length_in_beats
+	$TextureProgressBar.max_value = editor.maxBeats
+	editor.conductor.stream_paused = true
 
 func loadSong():
 	editor.conductor.loadSong(editor.songPath,editor.bpm,editor.delay)

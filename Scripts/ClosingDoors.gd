@@ -8,3 +8,4 @@ func closeDoors():
 	$Panel/Good/Label.text += str(Collider.goodScore)
 	$Panel/Perfect/Label.text += str(Collider.perfectScore)
 	$Panel/MaxCombo/Label.text += str(Collider.maxCombo)
+

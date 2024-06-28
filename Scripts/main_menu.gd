@@ -30,6 +30,9 @@ func _ready():
 	$Camera2D/VolumeBar.value = AudioServer.get_bus_volume_db(0)
 	PlayMusic()
 	$Transition.play("fade_in")
+	
+	if(!DirAccess.dir_exists_absolute("user://songs")):
+		DirAccess.make_dir_recursive_absolute("user://songs")
 
 func _physics_process(delta):
 	if(lastHoveredPos == null):
